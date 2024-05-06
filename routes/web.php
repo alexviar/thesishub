@@ -16,3 +16,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('login', function () {
+    return;
+})->name("login");
+
+Route::get('/buscar', function () {
+    return;
+})->name("trabajo_grado.buscar");
+
+Route::get('/publicar', function () {
+    return;
+})->name("trabajo_grado.publicar");
