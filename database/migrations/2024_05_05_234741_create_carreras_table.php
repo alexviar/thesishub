@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('carreras', function (Blueprint $table) {
             $table->id();
             $table->string("nombre");
-            $table->foreignIdFor(Facultad::class);
+            $table->foreignIdFor(Facultad::class)->constrained("facultades");
             $table->timestamps();
         });
     }
