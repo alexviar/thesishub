@@ -51,7 +51,7 @@ class TrabajoGradoController extends Controller
         ///////////filtro tutor////////////////////////////
         if (!empty($tutor)){       
             $tutores = Tutor::where('nombre_completo','like',"%". $tutor ."%")->get();          
-           if (!$tutores->isEmpty()) {          
+            if (!$tutores->isEmpty()) {          
                 $idsTutores = $tutores->pluck('id')->toArray();       
             }else{
                 //por defecto valor
@@ -59,7 +59,7 @@ class TrabajoGradoController extends Controller
             }    
             $TG = $TG->whereIn('tutor_id', $idsTutores);
         }       
-        /////////////////////////////////////////////////// 
+        //////////////////////////////////////////////////// 
         ///////////filtro author////////////////////////////
 
         ///////////////////////////////////////////////////
