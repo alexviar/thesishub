@@ -76,15 +76,23 @@
 
                     // Iterar sobre los resultados y agregar filas a la tabla
                     response.forEach(function(trabajo) {
-                        var html = '<tr>' +
-                                   '<td>' + trabajo.codigo + '</td>' +
-                                   '</tr>' +
-                                   '<tr>' +
-                                   '<td>' + trabajo.tema + '</td>' +
-                                   '</tr>' +
-                                   '<tr>' +
-                                   '<td>' + trabajo.resumen + '</td>' +
-                                   '</tr>';
+                        // var html = '<tr>' +
+                        //            '<td>' + trabajo.fecha_defensa.substring(0, 4) +'/#' + trabajo.codigo + '</td>' +
+                        //            '</tr>' +
+                        //            '<tr>' +
+                        //            '<td><b>' + trabajo.tema + '<b></td>' +
+                        //            '</tr>' +
+                        //            '<tr>' +
+                        //            '<td>' + trabajo.resumen + '</td>' +
+                        //            '</tr>';
+
+                        var html = `<div class="card mb-3">
+                                        <div class="card-body">
+                                            <p class="card-text"><span class="text-muted">${trabajo.fecha_defensa.substring(0, 4)}/#${trabajo.codigo}</span></p>
+                                            <h5 class="card-title">${trabajo.tema}</h5>
+                                            <p class="card-text">${trabajo.resumen}</p>                                            
+                                        </div>
+                                    </div>`;
 
                         $('#table-trabajogrado tbody').append(html);
                     });
