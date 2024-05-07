@@ -32,15 +32,23 @@ class TrabajoGradoController extends Controller
         $tutor = $request->input('tutor');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-       
-        // Lógica para filtrar los trabajos de grado según los criterios de búsqueda
-        $resultados = TrabajoGrado::where('tema', 'like', "%$theme%")
-                                    // ->where('autor', 'like', "%$author%")
-                                    // ->where('tutor', 'like', "%$tutor%")
-                                 //   ->whereDate('fecha_inicio', '>=', $startDate)
-                                  //  ->whereDate('fecha_fin', '<=', $endDate)
-                                    ->get();
-        
+      
+        $TG = TrabajoGrado::query();
+
+        if (!empty($theme)){
+            $TG = $TG->where('tema', 'like', "%$theme%");
+        }    
+        if (!empty($keyword)){
+            $TG = $TG->where('resumen', 'like', "%$keyword%");
+        }                   
+        if ($startDate){
+            $TG = $TG->whereDate('fecha_defensa', '>=', $startDate);
+        }  
+        if ($endDate){
+            $TG = $TG->whereDate('fecha_defensa', '<=', $endDate);
+        }
+        $resultados=$TG->get();
+
         return response()->json($resultados);
     }
 }

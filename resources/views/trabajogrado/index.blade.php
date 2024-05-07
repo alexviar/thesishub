@@ -71,28 +71,20 @@
                 type: 'GET',
                 data: $(this).serialize(),
                 success: function(response) {
-                    // Limpiar la tabla antes de agregar nuevos datos
                     $('#table-trabajogrado tbody').empty();
 
-                    // Iterar sobre los resultados y agregar filas a la tabla
-                    response.forEach(function(trabajo) {
-                        // var html = '<tr>' +
-                        //            '<td>' + trabajo.fecha_defensa.substring(0, 4) +'/#' + trabajo.codigo + '</td>' +
-                        //            '</tr>' +
-                        //            '<tr>' +
-                        //            '<td><b>' + trabajo.tema + '<b></td>' +
-                        //            '</tr>' +
-                        //            '<tr>' +
-                        //            '<td>' + trabajo.resumen + '</td>' +
-                        //            '</tr>';
-
-                        var html = `<div class="card mb-3">
-                                        <div class="card-body">
-                                            <p class="card-text"><span class="text-muted">${trabajo.fecha_defensa.substring(0, 4)}/#${trabajo.codigo}</span></p>
-                                            <h5 class="card-title">${trabajo.tema}</h5>
-                                            <p class="card-text">${trabajo.resumen}</p>                                            
-                                        </div>
-                                    </div>`;
+                    response.forEach(function(trabajo) {                    
+                        var html = `<tr>
+                                        <td>
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <p class="card-text"><span class="text-muted">${trabajo.fecha_defensa.substring(0, 4)}/#${trabajo.codigo}</span></p>
+                                                    <h5 class="card-title">${trabajo.tema}</h5>
+                                                    <p class="card-text">${trabajo.resumen}</p>                                            
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>`;
 
                         $('#table-trabajogrado tbody').append(html);
                     });
