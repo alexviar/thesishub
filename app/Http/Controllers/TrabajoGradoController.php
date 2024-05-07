@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\TrabajoGrado;
+use App\Models\Tutor;
 
 class TrabajoGradoController extends Controller
 {
@@ -47,6 +48,21 @@ class TrabajoGradoController extends Controller
         if ($endDate){
             $TG = $TG->whereDate('fecha_defensa', '<=', $endDate);
         }
+        ///////////filtro tutor////////////////////////////
+        if (!empty($tutor)){       
+            $tutores = Tutor::where('nombre_completo','like',"%". $tutor ."%")->get();          
+           if (!$tutores->isEmpty()) {          
+                $idsTutores = $tutores->pluck('id')->toArray();       
+            }else{
+                //por defecto valor
+                $idsTutores = [0=>99999];
+            }    
+            $TG = $TG->whereIn('tutor_id', $idsTutores);
+        }       
+        /////////////////////////////////////////////////// 
+        ///////////filtro author////////////////////////////
+
+        ///////////////////////////////////////////////////
         $resultados=$TG->get();
 
         return response()->json($resultados);
