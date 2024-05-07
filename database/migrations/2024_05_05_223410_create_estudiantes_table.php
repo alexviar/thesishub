@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('estudiantes', function (Blueprint $table) {
             $table->id();
-            $table->integer("nro_registro");
-            $table->integer("nombre_completo");
+            $table->string("nro_registro");
+            $table->string("nombre_completo");
             $table->timestamps();
         });
     }
