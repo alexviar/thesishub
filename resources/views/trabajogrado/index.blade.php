@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">Buscar Registros</div>
                 <div class="card-body">
-                    <form action="" method="GET">
+                    <form id="form-busquedatrabajo" method="GET">
                         <div class="form-group">
                             <label for="keyword">Palabra Clave:</label>
                             <input type="text" class="form-control" id="keyword" name="keyword">
@@ -48,61 +48,52 @@
             <!-- Listado de registros -->
             <div class="card">
                 <div class="card-header">Resultados de Búsqueda</div>
-                <div class="card-body">
-                 
-                        <table class="table">
-                           
-                            <tbody>
-                        
-                                <tr>
-                                  <td> 2024/#2345 </td>
-                                </tr>
-                                <tr>
-                                  <td> TItulo </td>
-                                </tr>
-                                <tr>
-                                  <td> Detalle <br> <hr> </td>
-                                </tr>
-
-
-                                <tr>
-                                  <td> 2024/#2346 </td>
-                                </tr>
-                                <tr>
-                                  <td> TItulo </td>
-                                </tr>
-                                <tr>
-                                  <td> Detalle <br> <hr> </td>
-                                </tr>
-
-
-                                <tr>
-                                  <td> 2024/#2347 </td>
-                                </tr>
-                                <tr>
-                                  <td> TItulo </td>
-                                </tr>
-                                <tr>
-                                  <td> Detalle <br> <hr> </td>
-                                </tr>
-
-
-                                <tr>
-                                  <td> 2024/#2348 </td>
-                                </tr>
-                                <tr>
-                                  <td> TItulo </td>
-                                </tr>
-                                <tr>
-                                  <td> Detalle <br> <hr> </td>
-                                </tr>
+                <div class="card-body">                 
+                        <table id="table-trabajogrado" class="table">                           
+                            <tbody>                                      
                             </tbody>
-                        </table>
-               
-                 
+                        </table>     
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#form-busquedatrabajo').on('submit', function(event) {
+            event.preventDefault();
+            console.log("here");
+            $.ajax({
+                url: '{{ route("trabajos.buscar") }}',
+                type: 'GET',
+                data: $(this).serialize(),
+                success: function(response) {
+                    // Limpiar la tabla antes de agregar nuevos datos
+                    $('#table-trabajogrado tbody').empty();
+
+                    // Iterar sobre los resultados y agregar filas a la tabla
+                    response.forEach(function(trabajo) {
+                        var html = '<tr>' +
+                                   '<td>' + trabajo.codigo + '</td>' +
+                                   '</tr>' +
+                                   '<tr>' +
+                                   '<td>' + trabajo.tema + '</td>' +
+                                   '</tr>' +
+                                   '<tr>' +
+                                   '<td>' + trabajo.resumen + '</td>' +
+                                   '</tr>';
+
+                        $('#table-trabajogrado tbody').append(html);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+

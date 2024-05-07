@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\TrabajoGrado;
+
 class TrabajoGradoController extends Controller
 {
     /**
@@ -17,68 +19,28 @@ class TrabajoGradoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function buscar(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $keyword = $request->input('keyword');
+        $theme = $request->input('theme');
+        $author = $request->input('author');
+        $tutor = $request->input('tutor');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+       
+        // Lógica para filtrar los trabajos de grado según los criterios de búsqueda
+        $resultados = TrabajoGrado::where('tema', 'like', "%$theme%")
+                                    // ->where('autor', 'like', "%$author%")
+                                    // ->where('tutor', 'like', "%$tutor%")
+                                 //   ->whereDate('fecha_inicio', '>=', $startDate)
+                                  //  ->whereDate('fecha_fin', '<=', $endDate)
+                                    ->get();
+        
+        return response()->json($resultados);
     }
 }
