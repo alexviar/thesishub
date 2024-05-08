@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Carrera;
 use App\Models\Estudiante;
+use App\Models\Facultad;
 use App\Models\Tutor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
@@ -32,7 +34,7 @@ class TrabajoGradoFactory extends Factory
         if(is_integer($estudiantes)){
             $estudiantes = Estudiante::factory($estudiantes)->raw();
             foreach($estudiantes as &$estudiante){
-                $estudiante["carrera_id"] = $this->faker->numberBetween(1,17);
+                $estudiante["carrera_id"] = Carrera::factory()->for(Facultad::factory())->create()->id;
             }
         }
         return $this->state([
