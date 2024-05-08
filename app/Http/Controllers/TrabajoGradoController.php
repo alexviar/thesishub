@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\TrabajoGrado;
 use App\Models\Tutor;
+use App\Models\Estudiante;
+use App\Models\CarreraEstudianteTrabajoGrado;
 
 class TrabajoGradoController extends Controller
 {
@@ -26,7 +28,7 @@ class TrabajoGradoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function buscar(Request $request)
-    {
+    {      
         $keyword = $request->input('keyword');
         $theme = $request->input('theme');
         $author = $request->input('author');
@@ -35,33 +37,31 @@ class TrabajoGradoController extends Controller
         $endDate = $request->input('end_date');
       
         $TG = TrabajoGrado::query();
-
+       
         if (!empty($theme)){
             $TG = $TG->where('tema', 'like', "%$theme%");
-        }    
+        }       
         if (!empty($keyword)){
             $TG = $TG->where('resumen', 'like', "%$keyword%");
-        }                   
+        }             
         if ($startDate){
             $TG = $TG->whereDate('fecha_defensa', '>=', $startDate);
         }  
         if ($endDate){
             $TG = $TG->whereDate('fecha_defensa', '<=', $endDate);
         }
-        ///////////filtro tutor////////////////////////////
-        if (!empty($tutor)){       
-            $tutores = Tutor::where('nombre_completo','like',"%". $tutor ."%")->get();          
-            if (!$tutores->isEmpty()) {          
-                $idsTutores = $tutores->pluck('id')->toArray();       
-            }else{
-                //por defecto valor
-                $idsTutores = [0=>99999];
-            }    
-            $TG = $TG->whereIn('tutor_id', $idsTutores);
+        ///////////filtro tutor////////////////////////////   
+        if (!empty($tutor)){   
+            $idTutores = Tutor::where('nombre_completo','like',"%". $tutor ."%")->pluck('id');          
+            $TG = $TG->whereIn('tutor_id', $idTutores);
         }       
         //////////////////////////////////////////////////// 
         ///////////filtro author////////////////////////////
-
+        if (!empty($author)){
+            $idsEstudiantes = Estudiante::where('nombre_completo', 'like', '%' . $author . '%')->pluck('id');
+            $idsTrabajosGrado = CarreraEstudianteTrabajoGrado::whereIn('estudiante_id', $idsEstudiantes)->pluck('trabajo_grado_id');
+            $TG = $TG->whereIn('id', $idsTrabajosGrado);          
+        }       
         ///////////////////////////////////////////////////
         $resultados=$TG->get();
 
