@@ -1,14 +1,12 @@
 <?php
 
 use App\Models\TrabajoGrado;
-use Database\Seeders\FacultadYCarrerasSeeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 test('crea un trabajo de grado con autores y tutor no registrados', function () {
     /** @var TestCase $this */
-    $this->seed(FacultadYCarrerasSeeder::class);
+
     $data = TrabajoGrado::factory()
         ->prepareForRequest()
         ->raw();
@@ -16,7 +14,7 @@ test('crea un trabajo de grado con autores y tutor no registrados', function () 
 
     $response = $this->post('/publicar', $data);
 
-    $response->assertSuccessful();
+    $response->assertOk();
     $response->assertSee('El trabajo de grado ha sido guardado.');
     $registro = TrabajoGrado::with("tutor", "estudiantes")->latest()->first();
     $this->assertNotNull($registro);
