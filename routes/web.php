@@ -2,6 +2,7 @@
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TrabajoGradoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,10 +30,10 @@ Auth::routes(
 );
 
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
-Route::get('trabajos-grado/buscar', function () {
-    return view('trabajos_grado.index');
-})->name("trabajo_grado.buscar");
 
-Route::get('trabajos-grado/publicar', function () {
-    return;
-})->name("trabajo_grado.publicar");
+Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->group(function(){
+
+    Route::get('buscar', 'index')->name("trabajo_grado.publicar");    
+    Route::get('publicar', 'create')->name("trabajo_grado.publicar");    
+    Route::post('publicar', 'store');
+});
