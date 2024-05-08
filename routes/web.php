@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TrabajoGradoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,8 @@ Route::get('/buscar', function () {
     return;
 })->name("trabajo_grado.buscar");
 
-Route::get('/publicar', function () {
-    return;
-})->name("trabajo_grado.publicar");
+Route::controller(TrabajoGradoController::class)->group(function(){
+
+    Route::get('publicar', 'create')->name("trabajo_grado.publicar");    
+    Route::post('publicar', 'store');
+});
