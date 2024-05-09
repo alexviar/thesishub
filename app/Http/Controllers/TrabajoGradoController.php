@@ -69,11 +69,7 @@ class TrabajoGradoController extends Controller
             $query->whereIn('id', $trabajosGradoIds);
         }
 
-        // Ejecutar la consulta y obtener resultados
-        $resultados = $query->get();
-
         // Devolver los resultados como JSON en la respuesta
-        return response()->json($resultados);
+        return response()->json($query->get());
     }
-}
 }
