@@ -12,9 +12,9 @@ use App\Models\CarreraEstudianteTrabajoGrado;
 class TrabajoGradoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra la vista principal de trabajos de grado.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -22,49 +22,58 @@ class TrabajoGradoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Realiza una búsqueda de trabajos de grado según los parámetros especificados.
      *
      * @param  Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function buscar(Request $request)
     {      
-        $keyword = $request->input('keyword');
-        $theme = $request->input('theme');
-        $author = $request->input('author');
-        $tutor = $request->input('tutor');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-      
-        $TG = TrabajoGrado::query();
-       
-        if (!empty($theme)){
-            $TG = $TG->where('tema', 'like', "%$theme%");
-        }       
-        if (!empty($keyword)){
-            $TG = $TG->where('resumen', 'like', "%$keyword%");
-        }             
-        if ($startDate){
-            $TG = $TG->whereDate('fecha_defensa', '>=', $startDate);
-        }  
-        if ($endDate){
-            $TG = $TG->whereDate('fecha_defensa', '<=', $endDate);
-        }
-        ///////////filtro tutor////////////////////////////   
-        if (!empty($tutor)){   
-            $idTutores = Tutor::where('nombre_completo','like',"%". $tutor ."%")->pluck('id');          
-            $TG = $TG->whereIn('tutor_id', $idTutores);
-        }       
-        //////////////////////////////////////////////////// 
-        ///////////filtro author////////////////////////////
-        if (!empty($author)){
-            $idsEstudiantes = Estudiante::where('nombre_completo', 'like', '%' . $author . '%')->pluck('id');
-            $idsTrabajosGrado = CarreraEstudianteTrabajoGrado::whereIn('estudiante_id', $idsEstudiantes)->pluck('trabajo_grado_id');
-            $TG = $TG->whereIn('id', $idsTrabajosGrado);          
-        }       
-        ///////////////////////////////////////////////////
-        $resultados=$TG->get();
+        // Obtener parámetros de búsqueda del request
+        $params = $request->only(['keyword', 'theme', 'author', 'tutor', 'start_date', 'end_date']);
 
+        // Crear una consulta base para TrabajoGrado
+        $query = TrabajoGrado::query();
+
+        // Aplicar filtros según los parámetros recibidos
+        if (!empty($params['theme'])) {
+            // Filtrar por tema del trabajo de grado
+            $query->where('tema', 'like', '%' . $params['theme'] . '%');
+        }
+
+        if (!empty($params['keyword'])) {
+            // Filtrar por palabra clave en el resumen
+            $query->where('resumen', 'like', '%' . $params['keyword'] . '%');
+        }
+
+        if (!empty($params['start_date'])) {
+            // Filtrar por fecha de defensa mínima
+            $query->whereDate('fecha_defensa', '>=', $params['start_date']);
+        }
+
+        if (!empty($params['end_date'])) {
+            // Filtrar por fecha de defensa máxima
+            $query->whereDate('fecha_defensa', '<=', $params['end_date']);
+        }
+
+        // Aplicar filtro por tutor si se especifica
+        if (!empty($params['tutor'])) {
+            $tutorIds = Tutor::where('nombre_completo', 'like', '%' . $params['tutor'] . '%')->pluck('id');
+            $query->whereIn('tutor_id', $tutorIds);
+        }
+
+        // Aplicar filtro por autor si se especifica
+        if (!empty($params['author'])) {
+            $estudianteIds = Estudiante::where('nombre_completo', 'like', '%' . $params['author'] . '%')->pluck('id');
+            $trabajosGradoIds = CarreraEstudianteTrabajoGrado::whereIn('estudiante_id', $estudianteIds)->pluck('trabajo_grado_id');
+            $query->whereIn('id', $trabajosGradoIds);
+        }
+
+        // Ejecutar la consulta y obtener resultados
+        $resultados = $query->get();
+
+        // Devolver los resultados como JSON en la respuesta
         return response()->json($resultados);
     }
+}
 }
