@@ -120,6 +120,7 @@
             input.dispatchEvent(new Event('change'));
             hiddenInput.value = responseJson.id
             hiddenInput.dispatchEvent(new Event('change'));
+            input.disabled = true
         }
     }
 
@@ -239,6 +240,7 @@
                     input.dispatchEvent(new Event('change'));
                     hiddenInput.value = responseJson.id
                     hiddenInput.dispatchEvent(new Event('change'));
+                    input.disabled = true
                 }
             })
 
