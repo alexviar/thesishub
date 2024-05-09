@@ -56,7 +56,7 @@ class LoginController extends Controller
             // El usuario no ha sido autenticado
             return back()->withErrors(
                 [
-                    'username' => 'El username puede estar incorrecto. Por favor, inténtelo de nuevo.',
+                    'username' => 'El usuario puede estar incorrecto. Por favor, inténtelo de nuevo.',
                     'password' => 'La clave puede estar incorrecta. Por favor, inténtelo de nuevo.'
                 ]
             );
