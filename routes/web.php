@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(RouteServiceProvider::HOME);
 });
 
 Auth::routes(
@@ -28,7 +30,7 @@ Auth::routes(
 
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 Route::get('trabajos-grado/buscar', function () {
-    return;
+    return view('trabajos_grado.index');
 })->name("trabajo_grado.buscar");
 
 Route::get('trabajos-grado/publicar', function () {
