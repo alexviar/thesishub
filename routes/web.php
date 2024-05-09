@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\RouteServiceProvider;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TrabajoGradoController;
 use Illuminate\Support\Facades\Route;
@@ -36,4 +37,20 @@ Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->grou
     Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
     Route::get('publicar', 'create')->name("trabajos_grado.publicar");    
     Route::post('publicar', 'store');
+});
+
+Route::get('tutores/{codigo}', function ($codigo){
+    $tutor = \App\Models\Tutor::firstWhere("codigo", $codigo);
+    if($tutor == null) {
+        throw new ModelNotFoundException();
+    }
+    return response()->json($tutor);
+});
+
+Route::get('estudiantes/{nro_registro}', function ($nro_registro){
+    $estudiante = \App\Models\Estudiante::firstWhere("nro_registro", $nro_registro);
+    if($estudiante == null) {
+        throw new ModelNotFoundException();
+    }
+    return response()->json($estudiante);
 });

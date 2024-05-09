@@ -8,9 +8,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @push("scripts")
-            <script>
-                window.addEventListener("load", ()=>document.getElementsById("reg-form").scrollIntoView());
-            </script>
+        <script>
+            window.addEventListener("load", () => document.getElementsById("reg-form").scrollIntoView());
+        </script>
         @endpush
         @endif
         @csrf
@@ -40,14 +40,21 @@
                 <div class="row">
                     <div class="col-lg-3 col-sm-6">
                         <div class="mb-3">
-                            <label for="codigo-tutor">Código</label>
-                            <input id="codigo-tutor" class="form-control" placeholder="Código" name="tutor[codigo]">
+                            <label for="codigo-tutor" class="form-label">Código</label>
+                            <div class="input-group mb-3">
+                                <input id="codigo-tutor" class="form-control" name="tutor[codigo]">
+                                <button class="btn btn-outline-secondary" type="button" onclick="buscarTutor(event)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-9">
                         <div class="mb-3">
-                            <label for="nombre-completo-tutor">Nombre Completo</label>
-                            <input id="nombre-completo-tutor" class="form-control" placeholder="Nombre completo" name="tutor[nombre_completo]">
+                            <label for="nombre-completo-tutor" class="form-label">Nombre Completo</label>
+                            <input id="nombre-completo-tutor" class="form-control" disabled name="tutor[nombre_completo]">
                         </div>
                     </div>
                     <input type="hidden" name="tutor[id]">
@@ -68,6 +75,7 @@
         </div>
     </form>
 </div>
+
 @endsection
 @push("scripts")
 <script>
@@ -78,7 +86,31 @@
         carrera_id: ""
     }];
 
-    var carreras = {!!$carreras!!}
+    var carreras = <?php echo $carreras; ?>;
+
+    async function buscarTutor(e) {
+        const input = document.getElementsByName("tutor[nombre_completo]").item(0)
+        const hiddenInput = document.getElementsByName("tutor[id]").item(0)
+        const value = document.getElementById("codigo-tutor").value;
+        
+        if (!value) return;
+        
+        const response = await fetch("/tutores/" + value)
+
+        if (response.status == 404) {
+            input.disabled = false
+            return
+        }
+    
+        if (response.status == 200) {
+            const responseJson = await response.json();
+    
+            input.value = responseJson.nombre_completo
+            input.dispatchEvent(new Event('change'));
+            hiddenInput.value = responseJson.id
+            hiddenInput.dispatchEvent(new Event('change'));
+        }
+    }
 
     window.addEventListener("load", function() {
         renderEstudiantes();
@@ -113,6 +145,14 @@
             row.classList.add("row");
             let formGroup, controlId, toFocus;
 
+            const hiddenInput = document.createElement("input")
+            hiddenInput.type = "hidden"
+            hiddenInput.name = `estudiantes[${i}][id]`;
+            hiddenInput.value = estudiantes[i].id ?? "";
+            hiddenInput.addEventListener("change", function(e) {
+                estudiantes[i].id = event.target.value;
+            })
+
             formGroup = document.createElement("div");
             formGroup.className = "col-lg-3 col-md-6 mb-3";
             label = document.createElement("label");
@@ -128,8 +168,20 @@
             input.addEventListener("change", function(event) {
                 estudiantes[i].nro_registro = event.target.value;
             });
+            inputGroup = document.createElement("div");
+            inputGroup.classList.add("input-group")
+            inputGroup.classList.add("mb-3")
+            inputGroup.appendChild(input)
+            let inputGroupButton = document.createElement("button")
+            inputGroupButton.type = "button"
+            inputGroupButton.classList.add("btn")
+            inputGroupButton.classList.add("btn-outline-secondary")
+            inputGroupButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>`
+            inputGroup.appendChild(inputGroupButton)
             formGroup.appendChild(label);
-            formGroup.appendChild(input);
+            formGroup.appendChild(inputGroup);
             row.appendChild(formGroup);
             toFocus = input;
 
@@ -145,12 +197,35 @@
             input.classList.add("form-control");
             input.name = `estudiantes[${i}][nombre_completo]`;
             input.value = estudiantes[i].nombre_completo
+            input.disabled = true;
             input.addEventListener("change", function(event) {
                 estudiantes[i].nombre_completo = event.target.value;
             });
             formGroup.appendChild(label);
             formGroup.appendChild(input);
             row.appendChild(formGroup)
+
+
+            inputGroupButton.addEventListener("click", async (e) => {
+                const value = e.currentTarget.previousSibling.value
+                if (!value) return;
+
+                const response = await fetch("/estudiantes/" + value)
+
+                if (response.status == 404) {
+                    input.disabled = false
+                    return
+                }
+            
+                if (response.status == 200) {
+                    const responseJson = await response.json();
+            
+                    input.value = responseJson.nombre_completo
+                    input.dispatchEvent(new Event('change'));
+                    hiddenInput.value = responseJson.id
+                    hiddenInput.dispatchEvent(new Event('change'));
+                }
+            })
 
             formGroup = document.createElement("div");
             formGroup.className = "col-12 mb-3";
@@ -160,7 +235,7 @@
             label.for = controlId;
             label.innerHTML = "Carrera";
             formGroup.appendChild(label);
-            select = document.createElement("div"); 
+            select = document.createElement("div");
             select.innerHTML = `@include("components.searchable_select")`;
             select.id = controlId
             initializeSelector(select, {

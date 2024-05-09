@@ -28,3 +28,27 @@ test('crea un trabajo de grado con autores y tutor no registrados', function () 
         ])
     );
 });
+
+test('crea un trabajo de grado con autores y tutor ya registrados', function () {
+    /** @var TestCase $this */
+
+    $data = TrabajoGrado::factory()
+        ->prepareForRequest(true, 2)
+        ->raw();
+    $this->travelTo("2024-05-07");
+
+    $response = $this->post('/trabajos-grado/publicar', $data);
+
+    $response->assertOk();
+    $response->assertSee('El trabajo de grado ha sido guardado.');
+    $registro = TrabajoGrado::with("estudiantes")->latest()->first();
+    $this->assertNotNull($registro);
+    expect($registro->toArray())->toMatchArray(Arr::except($data, ["documento", "tutor", "estudiantes"]) + ["codigo" => "2024/1"]);
+    expect($registro->tutor_id)->toBe($data["tutor"]["id"]);
+    expect($registro->estudiantes->map(fn($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["id", "pivot.carrera_id"])))->toMatchArray(
+        Arr::map($data["estudiantes"], fn($estudiante) => [
+            "id" => $estudiante["id"],
+            "pivot.carrera_id" =>  $estudiante["carrera_id"]
+        ])
+    );
+});

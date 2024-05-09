@@ -8,6 +8,7 @@ use App\Models\Facultad;
 use App\Models\Tutor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TrabajoGrado>
@@ -29,17 +30,22 @@ class TrabajoGradoFactory extends Factory
         ];
     }
 
-    public function prepareForRequest($tutor = null, $estudiantes = 2)
+    public function prepareForRequest($persistTutor=false, $persistEstudiantes=0, $totalEstudiantes=2)
     {
-        if(is_integer($estudiantes)){
-            $estudiantes = Estudiante::factory($estudiantes)->raw();
-            foreach($estudiantes as &$estudiante){
-                $estudiante["carrera_id"] = Carrera::factory()->for(Facultad::factory())->create()->id;
-            }
+        $tutorFactoryMethod = $persistTutor ? "create" : "raw";
+        $tutor = Tutor::factory()->$tutorFactoryMethod();
+        $estudiantes = Arr::shuffle(
+            Estudiante::factory($persistEstudiantes)->create()->toArray() +
+            Estudiante::factory($totalEstudiantes - $persistEstudiantes)->raw()
+        );
+        
+        foreach($estudiantes as &$estudiante){
+            $estudiante["carrera_id"] = Carrera::factory()->for(Facultad::factory())->create()->id;
         }
+
         return $this->state([
             "documento" => UploadedFile::fake()->create('avatar.pdf', "1500", "application/pdf"),
-            "tutor" => $tutor ?? Tutor::factory()->raw(),
+            "tutor" => is_array($tutor) ? $tutor : $tutor->toArray(),
             "estudiantes" => $estudiantes
         ]);
     }

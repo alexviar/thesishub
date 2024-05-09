@@ -38,18 +38,20 @@ class TrabajoGradoController extends Controller
     }
 
     function store(Request $request){
-        $payload = $request->except("_token");
+        $payload = $request->except("_token", "documento");
 
         $documento = $request->file("documento");
         $payload["filename"] = $documento->store("trabajos de grado");
         $payload["codigo"] = Carbon::today()->year . '/' . (TrabajoGrado::count() + 1);
 
-        $tutor = Tutor::create($payload["tutor"]);
-        $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor->id]);
+        $tutor_id = $payload["tutor"]["id"] ?? Tutor::create($payload["tutor"])->id;
+        $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor_id]);
         if($trabajo){
             foreach($payload["estudiantes"] as $estudianteData){
-                $estudiante = Estudiante::create($estudianteData);
-                $trabajo->estudiantes()->attach($estudiante->id, Arr::only($estudianteData, "carrera_id"));
+                [$estudiante_id, $carrera_id] = isset($estudianteData["id"]) ? 
+                    [$estudianteData["id"], $estudianteData["carrera_id"]] :
+                    [Estudiante::create($estudianteData)->id, $estudianteData["carrera_id"]];
+                $trabajo->estudiantes()->attach($estudiante_id, ["carrera_id" => $carrera_id]);
             }
             return view('trabajos_grado.publicar', [
                 "carreras" => $this->prepareCarrerasForDropdown(),
