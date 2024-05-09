@@ -60,40 +60,68 @@
 </div>
 @endsection
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#form-busquedatrabajo').on('submit', function(event) {
-            event.preventDefault();
-            console.log("here");
-            $.ajax({
-                url: '{{ route("trabajos.buscar") }}',
-                type: 'GET',
-                data: $(this).serialize(),
-                success: function(response) {
-                    $('#table-trabajogrado tbody').empty();
+   document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#form-busquedatrabajo');
 
-                    response.forEach(function(trabajo) {                    
-                        var html = `<tr>
-                                        <td>
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <p class="card-text"><span class="text-muted">${trabajo.fecha_defensa.substring(0, 4)}/#${trabajo.codigo}</span></p>
-                                                    <h5 class="card-title">${trabajo.tema}</h5>
-                                                    <p class="card-text">${trabajo.resumen}</p>                                            
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>`;
+    form.addEventListener('submit', handleFormSubmit);
+});
 
-                        $('#table-trabajogrado tbody').append(html);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        });
+async function handleFormSubmit(event) {
+    event.preventDefault();
+
+    try {
+        const formData = new FormData(event.target);
+        const queryParams = new URLSearchParams(formData).toString();
+        const url = `{{ route("trabajos.buscar") }}?${queryParams}`;
+
+        const trabajos = await fetchData(url);
+
+        renderTrabajos(trabajos);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+async function fetchData(url) {
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     });
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+}
+
+function renderTrabajos(trabajos) {
+    const tableBody = document.querySelector('#table-trabajogrado tbody');
+    tableBody.innerHTML = ''; // Limpiar el contenido anterior
+
+    trabajos.forEach(trabajo => {
+        const html = createTrabajoHTML(trabajo);
+        tableBody.insertAdjacentHTML('beforeend', html);
+    });
+}
+
+function createTrabajoHTML(trabajo) {
+    return `
+        <tr>
+            <td>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="card-text"><span class="text-muted">${trabajo.fecha_defensa.substring(0, 4)}/#${trabajo.codigo}</span></p>
+                        <h5 class="card-title">${trabajo.tema}</h5>
+                        <p class="card-text">${trabajo.resumen}</p>                                            
+                    </div>
+                </div>
+            </td>
+        </tr>
+    `;
+}
 </script>
 
