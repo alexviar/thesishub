@@ -27,10 +27,10 @@ Auth::routes(
 );
 
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
-Route::get('/buscar', function () {
+Route::get('trabajos-grado/buscar', function () {
     return;
 })->name("trabajo_grado.buscar");
 
-Route::get('/publicar', function () {
+Route::get('trabajos-grado/publicar', function () {
     return;
 })->name("trabajo_grado.publicar");
