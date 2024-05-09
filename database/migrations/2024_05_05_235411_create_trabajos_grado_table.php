@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('trabajos_grado', function (Blueprint $table) {
             $table->id();
             $table->string("codigo")->unique();
-            $table->string("tema");
+            $table->text("tema");
             $table->text("resumen");
             $table->date("fecha_defensa");
             $table->string("filename");
