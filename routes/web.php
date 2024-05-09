@@ -19,3 +19,15 @@ Route::get('trabajogrado',[TrabajoGradoController::class,'index']);
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes(
+    [
+        'register' => false, // Deshabilitar el registro de usuarios
+        'reset' => false, // Deshabilitar restablecimiento de contraseña
+        'verify' => false, // Deshabilitar verificación de correo electrónico
+        'confirm' => false, // Deshabilitar confirmación de contraseña
+    ]
+);
+
+Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/trabajos-grado/buscar', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
