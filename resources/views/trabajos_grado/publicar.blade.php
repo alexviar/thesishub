@@ -1,7 +1,7 @@
 @extends("layouts.app")
 @section("content")
 <div class="container bg-white my-4 p-4 shadow-sm rounded" style="min-height:80vh">
-    <form id="reg-form" aria-label="Registro de trabajos de grado" method="post" enctype="multipart/form-data" action="{{route("trabajo_grado.publicar")}}" class="d-flex flex-column">
+    <form id="reg-form" aria-label="Registro de trabajos de grado" method="post" enctype="multipart/form-data" action="{{route("trabajos_grado.publicar")}}" class="d-flex flex-column">
         @if($ui["show_confirmation_message"])
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             El trabajo de grado ha sido guardado.

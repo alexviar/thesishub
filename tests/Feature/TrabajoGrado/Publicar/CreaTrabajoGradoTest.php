@@ -12,7 +12,7 @@ test('crea un trabajo de grado con autores y tutor no registrados', function () 
         ->raw();
     $this->travelTo("2024-05-07");
 
-    $response = $this->post('/publicar', $data);
+    $response = $this->post('trabajos-grado/publicar', $data);
 
     $response->assertOk();
     $response->assertSee('El trabajo de grado ha sido guardado.');

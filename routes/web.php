@@ -33,7 +33,7 @@ Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 
 Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->group(function(){
 
-    Route::get('buscar', 'index')->name("trabajo_grado.publicar");    
-    Route::get('publicar', 'create')->name("trabajo_grado.publicar");    
+    Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
+    Route::get('publicar', 'create')->name("trabajos_grado.publicar");    
     Route::post('publicar', 'store');
 });

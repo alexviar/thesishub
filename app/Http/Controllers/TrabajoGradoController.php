@@ -28,7 +28,7 @@ class TrabajoGradoController extends Controller
 
     function create(){
         $carreras = $this->prepareCarrerasForDropdown();
-        return view('trabajo_grado.publicar', [
+        return view('trabajos_grado.publicar', [
             "carreras" => $carreras,
             "ui" => [
                 "title" => "Registro de trabajos de grado",
@@ -51,7 +51,7 @@ class TrabajoGradoController extends Controller
                 $estudiante = Estudiante::create($estudianteData);
                 $trabajo->estudiantes()->attach($estudiante->id, Arr::only($estudianteData, "carrera_id"));
             }
-            return view('trabajo_grado.publicar', [
+            return view('trabajos_grado.publicar', [
                 "carreras" => $this->prepareCarrerasForDropdown(),
                 "ui" => [
                     "title" => "Registro de trabajos de grado",
