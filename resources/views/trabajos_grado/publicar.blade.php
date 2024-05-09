@@ -9,10 +9,21 @@
         </div>
         @push("scripts")
         <script>
-            window.addEventListener("load", () => document.getElementsById("reg-form").scrollIntoView());
+            window.addEventListener("load", () => document.getElementById("reg-form").scrollIntoView());
         </script>
         @endpush
         @endif
+
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         @csrf
         <fieldset class="bg-light p-3 mb-3">
             <legend>Informacion general</legend>
@@ -89,22 +100,22 @@
     var carreras = <?php echo $carreras; ?>;
 
     async function buscarTutor(e) {
+        const value = document.getElementById("codigo-tutor").value;
         const input = document.getElementsByName("tutor[nombre_completo]").item(0)
         const hiddenInput = document.getElementsByName("tutor[id]").item(0)
-        const value = document.getElementById("codigo-tutor").value;
-        
+
         if (!value) return;
-        
+
         const response = await fetch("/tutores/" + value)
 
         if (response.status == 404) {
             input.disabled = false
             return
         }
-    
+
         if (response.status == 200) {
             const responseJson = await response.json();
-    
+
             input.value = responseJson.nombre_completo
             input.dispatchEvent(new Event('change'));
             hiddenInput.value = responseJson.id
@@ -136,6 +147,7 @@
 
     function renderEstudiantes() {
         for (let i in estudiantes) {
+            const prefixId = `estudiante-${i}`
             let estudiante = estudiantes[i];
             const container = document.getElementById("estudiantes-fieldset");
             const component = document.createElement("div");
@@ -146,6 +158,7 @@
             let formGroup, controlId, toFocus;
 
             const hiddenInput = document.createElement("input")
+            hiddenInput.id = `${prefixId}-id`
             hiddenInput.type = "hidden"
             hiddenInput.name = `estudiantes[${i}][id]`;
             hiddenInput.value = estudiantes[i].id ?? "";
@@ -189,7 +202,7 @@
             formGroup.className = "col-lg-9 mb-3";
             label = document.createElement("label");
             label.classList.add("form-label");
-            controlId = `nombre-completo-${i}`
+            controlId = `${prefixId}-nombre-completo`
             label.for = controlId;
             label.innerHTML = "Nombre completo";
             input = document.createElement("input");
@@ -208,6 +221,8 @@
 
             inputGroupButton.addEventListener("click", async (e) => {
                 const value = e.currentTarget.previousSibling.value
+                const input = document.getElementById(`${prefixId}-nombre-completo`)
+                const hiddenInput = document.getElementById(`${prefixId}-id`)
                 if (!value) return;
 
                 const response = await fetch("/estudiantes/" + value)
@@ -216,10 +231,10 @@
                     input.disabled = false
                     return
                 }
-            
+
                 if (response.status == 200) {
                     const responseJson = await response.json();
-            
+
                     input.value = responseJson.nombre_completo
                     input.dispatchEvent(new Event('change'));
                     hiddenInput.value = responseJson.id
