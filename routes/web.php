@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,17 +16,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(RouteServiceProvider::HOME);
 });
 
-Route::get('login', function () {
-    return;
-})->name("login");
+Auth::routes(
+    [
+        'register' => false, // Deshabilitar el registro de usuarios
+        'reset' => false, // Deshabilitar restablecimiento de contraseña
+        'verify' => false, // Deshabilitar verificación de correo electrónico
+        'confirm' => false, // Deshabilitar confirmación de contraseña
+    ]
+);
 
-Route::get('/buscar', function () {
-    return;
+Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
+Route::get('trabajos-grado/buscar', function () {
+    return view('trabajos_grado.index');
 })->name("trabajo_grado.buscar");
 
-Route::get('/publicar', function () {
+Route::get('trabajos-grado/publicar', function () {
     return;
 })->name("trabajo_grado.publicar");
