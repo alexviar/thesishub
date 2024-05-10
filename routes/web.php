@@ -1,7 +1,9 @@
 <?php
 
 use App\Providers\RouteServiceProvider;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TrabajoGradoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,10 +31,26 @@ Auth::routes(
 );
 
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
-Route::get('trabajos-grado/buscar', function () {
-    return view('trabajos_grado.index');
-})->name("trabajo_grado.buscar");
 
-Route::get('trabajos-grado/publicar', function () {
-    return;
-})->name("trabajo_grado.publicar");
+Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->group(function(){
+
+    Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
+    Route::middleware('auth')->get('publicar', 'create')->name("trabajos_grado.publicar");    
+    Route::middleware('auth')->post('publicar', 'store');
+});
+
+Route::get('tutores/{codigo}', function ($codigo){
+    $tutor = \App\Models\Tutor::firstWhere("codigo", $codigo);
+    if($tutor == null) {
+        throw new ModelNotFoundException();
+    }
+    return response()->json($tutor);
+});
+
+Route::get('estudiantes/{nro_registro}', function ($nro_registro){
+    $estudiante = \App\Models\Estudiante::firstWhere("nro_registro", $nro_registro);
+    if($estudiante == null) {
+        throw new ModelNotFoundException();
+    }
+    return response()->json($estudiante);
+});

@@ -19,7 +19,7 @@ class UsuarioFactory extends Factory
     {
         return [
             'nombre_completo' => fake()->name(),
-            'username' => fake()->name(),
+            'username' => fake()->userName(),
             'password' => Hash::make('123123'), // password
         ];
     }
