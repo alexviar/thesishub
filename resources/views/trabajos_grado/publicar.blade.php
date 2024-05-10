@@ -1,7 +1,7 @@
 @extends("layouts.app")
 @section("content")
 <div class="container bg-white my-4 p-4 shadow-sm rounded" style="min-height:80vh">
-    <form id="reg-form" aria-label="Registro de trabajos de grado" method="post" enctype="multipart/form-data" action="{{route("trabajos_grado.publicar")}}" class="d-flex flex-column">
+    <form id="reg-form" autocomplete="off" aria-label="Registro de trabajos de grado" method="post" enctype="multipart/form-data" action="{{route("trabajos_grado.publicar")}}" class="d-flex flex-column">
         @if($ui["show_confirmation_message"])
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             El trabajo de grado ha sido guardado.
@@ -13,7 +13,7 @@
         </script>
         @endpush
         @endif
-
+        
         @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -29,19 +29,19 @@
             <legend>Informacion general</legend>
             <div class="mb-3">
                 <label class="form-label" form="tema">Tema</label>
-                <input id="tema" class="form-control" name="tema">
+                <input id="tema" class="form-control" name="tema" value="{{old('tema')}}">
             </div>
             <div class="mb-3">
                 <label class="form-label" form="resumen">Resumen</label>
-                <textarea id="resumen" class="form-control" rows="10" name="resumen"></textarea>
+                <textarea id="resumen" class="form-control" rows="10" name="resumen">{{old('resumen')}}</textarea>
             </div>
             <div class="mb-3">
                 <label class="form-label" form="fecha-defensa">Fecha de defensa</label>
-                <input id="fecha-defensa" type="date" class="form-control" name="fecha_defensa">
+                <input id="fecha-defensa" type="date" class="form-control" name="fecha_defensa" value="{{old('fecha_defensa')}}">
             </div>
             <div class="mb-3">
                 <label class="form-label" form="documento">Documento</label>
-                <input id="documento" type="file" class="form-control" name="documento">
+                <input id="documento" type="file" accept="application/pdf" class="form-control" name="documento">
             </div>
         </fieldset>
 
@@ -53,7 +53,7 @@
                         <div class="mb-3">
                             <label for="codigo-tutor" class="form-label">Código</label>
                             <div class="input-group mb-3">
-                                <input id="codigo-tutor" class="form-control" name="tutor[codigo]">
+                                <input id="codigo-tutor" class="form-control" name="tutor[codigo]" value="{{optional(old('tutor'))['codigo']}}">
                                 <button class="btn btn-outline-secondary" type="button" onclick="buscarTutor(event)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
@@ -62,13 +62,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-9">
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <div class="mb-3">
                             <label for="nombre-completo-tutor" class="form-label">Nombre Completo</label>
-                            <input id="nombre-completo-tutor" class="form-control" disabled name="tutor[nombre_completo]">
+                            <input id="nombre-completo-tutor" class="form-control" readonly name="tutor[nombre_completo]" value="{{optional(old('tutor'))['nombre_completo']}}">
                         </div>
                     </div>
-                    <input type="hidden" name="tutor[id]">
+                    <input type="hidden" name="tutor[id]" value="{{optional(old('tutor'))['id']}}">
                 </div>
             </div>
         </fieldset>
@@ -90,12 +92,14 @@
 @endsection
 @push("scripts")
 <script>
-    var estudiantes = [{
-        id: "",
-        nro_registro: "",
-        nombre_completo: "",
-        carrera_id: ""
-    }];
+    var estudiantes = <?php echo json_encode(old("estudiantes") ?? [
+        [
+            'id'=> '',
+            'nro_registro'=> '',
+            'nombre_completo'=> '',
+            'carrera_id'=> ''
+        ]
+    ]); ?>
 
     var carreras = <?php echo $carreras; ?>;
 
@@ -109,7 +113,7 @@
         const response = await fetch("/tutores/" + value)
 
         if (response.status == 404) {
-            input.disabled = false
+            input.readOnly = false
             return
         }
 
@@ -120,7 +124,7 @@
             input.dispatchEvent(new Event('change'));
             hiddenInput.value = responseJson.id
             hiddenInput.dispatchEvent(new Event('change'));
-            input.disabled = true
+            input.readOnly = true
         }
     }
 
@@ -140,10 +144,7 @@
         renderEstudiantes();
         const lastChild = container.lastElementChild;
         lastChild.scrollIntoView();
-        lastChild.children[0].children[0].children[1].focus();
-        // lastChild.firstChild().focus();
-        // toFocus.focus();
-        // component.scrollIntoView();
+        lastChild.querySelector(`div.input-group input`).focus();
     }
 
     function renderEstudiantes() {
@@ -154,11 +155,14 @@
             const component = document.createElement("div");
             component.className = "rounded p-3 mb-3";
             component.style = "background-color:rgba(0,0,0,0.05)";
-            const row = document.createElement("div");
+            let row = document.createElement("div");
             row.classList.add("row");
-            let formGroup, controlId, toFocus;
+            let formGroup, controlId;
+
+            component.innerHTML = `<div class="row"><div class="col-auto ms-auto">Estudiante #${+i+1}</div></div>`
 
             const hiddenInput = document.createElement("input")
+            component.appendChild(hiddenInput)
             hiddenInput.id = `${prefixId}-id`
             hiddenInput.type = "hidden"
             hiddenInput.name = `estudiantes[${i}][id]`;
@@ -171,7 +175,7 @@
             formGroup.className = "col-lg-3 col-md-6 mb-3";
             label = document.createElement("label");
             label.classList.add("form-label");
-            controlId = `nro-registro-${i}`
+            controlId = `${prefixId}-nro-registro`
             label.for = controlId;
             label.innerHTML = "Nro. de Registro";
             input = document.createElement("input");
@@ -197,10 +201,13 @@
             formGroup.appendChild(label);
             formGroup.appendChild(inputGroup);
             row.appendChild(formGroup);
-            toFocus = input;
+            component.appendChild(row)
+
+            row = document.createElement("div")
+            row.classList.add("div")
 
             formGroup = document.createElement("div");
-            formGroup.className = "col-lg-9 mb-3";
+            formGroup.className = "col-12 mb-3";
             label = document.createElement("label");
             label.classList.add("form-label");
             controlId = `${prefixId}-nombre-completo`
@@ -211,14 +218,13 @@
             input.classList.add("form-control");
             input.name = `estudiantes[${i}][nombre_completo]`;
             input.value = estudiantes[i].nombre_completo
-            input.disabled = true;
+            input.readOnly = true;
             input.addEventListener("change", function(event) {
                 estudiantes[i].nombre_completo = event.target.value;
             });
             formGroup.appendChild(label);
             formGroup.appendChild(input);
-            row.appendChild(formGroup)
-
+            row.appendChild(formGroup);
 
             inputGroupButton.addEventListener("click", async (e) => {
                 const value = e.currentTarget.previousSibling.value
@@ -229,7 +235,7 @@
                 const response = await fetch("/estudiantes/" + value)
 
                 if (response.status == 404) {
-                    input.disabled = false
+                    input.readOnly = false
                     return
                 }
 
@@ -240,7 +246,7 @@
                     input.dispatchEvent(new Event('change'));
                     hiddenInput.value = responseJson.id
                     hiddenInput.dispatchEvent(new Event('change'));
-                    input.disabled = true
+                    input.readOnly = true
                 }
             })
 
@@ -283,11 +289,6 @@
             row.appendChild(col);
             component.appendChild(row);
 
-            const inId = document.createElement("input");
-            inId.type = "hidden";
-            inId.name = `estudiantes[${i}][id]`;
-            inId.value = estudiantes[i].id;
-            component.appendChild(inId);
             container.appendChild(component);
         }
     }
