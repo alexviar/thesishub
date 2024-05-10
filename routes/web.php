@@ -35,8 +35,8 @@ Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->group(function(){
 
     Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
-    Route::get('publicar', 'create')->name("trabajos_grado.publicar");    
-    Route::post('publicar', 'store');
+    Route::middleware('auth')->get('publicar', 'create')->name("trabajos_grado.publicar");    
+    Route::middleware('auth')->post('publicar', 'store');
 });
 
 Route::get('tutores/{codigo}', function ($codigo){

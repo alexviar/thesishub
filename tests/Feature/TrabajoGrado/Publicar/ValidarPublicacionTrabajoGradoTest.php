@@ -1,17 +1,17 @@
 <?php
 
 use App\Models\Estudiante;
-use App\Models\TrabajoGrado;
 use App\Models\Tutor;
+use App\Models\Usuario;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Tests\TestCase;
 
 
 it('valida los campos requeridos', function () {
     /** @var TestCase $this */
 
-    $response = $this->post('trabajos-grado/publicar', []);
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', []);
 
     $response->assertRedirect();
     $response->assertSessionHasErrors([
@@ -25,14 +25,32 @@ it('valida los campos requeridos', function () {
     ]);
 });
 
+it('valida los campos requeridos de los estudiantes', function () {
+    /** @var TestCase $this */
+
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', [
+            "estudiantes" => [
+                []
+            ]
+        ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHasErrors([
+        'estudiantes.0.nro_registro' => 'El campo número de registro del estudiante 1 es requerido.',
+        'estudiantes.0.nombre_completo' => 'El campo nombre del estudiante 1 es requerido.',
+        'estudiantes.0.carrera_id' => 'El campo carrera del estudiante 1 es requerido.',
+    ]);
+});
 
 it('valida que la fecha de defensa sea anterior a la fecha actual', function () {
     /** @var TestCase $this */
     $this->travelTo("2024-05-10");
 
-    $response = $this->post('trabajos-grado/publicar', [
-        "fecha_defensa" => "2024-05-11"
-    ]);
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', [
+            "fecha_defensa" => "2024-05-11"
+        ]);
 
     $response->assertRedirect();
     $response->assertSessionHasErrors([
@@ -44,9 +62,10 @@ it('valida que el tipo de documento sea PDF', function () {
     /** @var TestCase $this */
     $this->travelTo("2024-05-10");
 
-    $response = $this->post('trabajos-grado/publicar', [
-        "documento" => UploadedFile::fake()->create('avatar.docx')
-    ]);
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', [
+            "documento" => UploadedFile::fake()->create('avatar.docx')
+        ]);
 
     $response->assertRedirect();
     $response->assertSessionHasErrors([
@@ -58,11 +77,12 @@ it('valida que si se pasa el id del tutor, entonces su nombre y codigo no son ne
     /** @var TestCase $this */
     $this->travelTo("2024-05-10");
 
-    $response = $this->post('trabajos-grado/publicar', [
-        "tutor" => [
-            "id" => Tutor::factory()->create()->id
-        ]
-    ]);
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', [
+            "tutor" => [
+                "id" => Tutor::factory()->create()->id
+            ]
+        ]);
 
     $response->assertRedirect();
     $response->assertSessionDoesntHaveErrors([
@@ -76,13 +96,14 @@ it('valida que si se pasa el id del estudiante, entonces su nombre y registro no
     /** @var TestCase $this */
     $this->travelTo("2024-05-10");
 
-    $response = $this->post('trabajos-grado/publicar', [
-        "estudiantes" => [
-            [
-                "id" => Estudiante::factory()->create()->id
+    $response = $this->actingAs(Usuario::factory()->create())
+        ->post('trabajos-grado/publicar', [
+            "estudiantes" => [
+                [
+                    "id" => Estudiante::factory()->create()->id
+                ]
             ]
-        ]
-    ]);
+        ]);
 
     $response->assertRedirect();
     $response->assertSessionDoesntHaveErrors([
