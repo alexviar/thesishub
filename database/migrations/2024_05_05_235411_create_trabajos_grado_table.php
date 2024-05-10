@@ -44,5 +44,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('trabajos_grado');
+        Schema::dropIfExists('carrera_estudiante_trabajo_grado');
     }
 };
