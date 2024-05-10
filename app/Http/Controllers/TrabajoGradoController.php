@@ -44,10 +44,12 @@ class TrabajoGradoController extends Controller
             "fecha_defensa" => "required|date|before_or_equal:".date('Y-m-d'),
             "documento" => "required|file|mimetypes:application/pdf",
 
+            "tutor.id" => "nullable",
             "tutor.codigo" => "required_without:tutor.id|string",
             "tutor.nombre_completo" => "required_without:tutor.id|string",
-
+            
             "estudiantes" => "required|array|min:1",
+            "estudiantes.*.id" => "nullable",
             "estudiantes.*.nro_registro" => "required_without:estudiantes.*.id|string",
             "estudiantes.*.nombre_completo" => "required_without:estudiantes.*.id|string",
             "estudiantes.*.carrera_id" => "required|exists:carreras,id",
