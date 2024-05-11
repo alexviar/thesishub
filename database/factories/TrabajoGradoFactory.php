@@ -15,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class TrabajoGradoFactory extends Factory
 {
+    protected $unsets = [];
+
     /**
      * Define the model's default state.
      *
@@ -22,12 +24,26 @@ class TrabajoGradoFactory extends Factory
      */
     public function definition()
     {
-        return [
+        return $this->unset([
             // "codigo" => $this->faker->numerify("####/##"),
             "tema" => $this->faker->realText(200),
             "resumen" => $this->faker->realTextBetween(400, 800),
-            "fecha_defensa" => $this->faker->date()
-        ];
+            "fecha_defensa" => $this->faker->date(),
+            "tutor_id" => Tutor::factory(),
+            "filename" => $this->faker->filePath()
+        ], $this->unsets);
+    }
+
+    /**
+     * Uset multiple keys from array
+     * 
+     * @return array
+     */
+    protected function unset($array, $keys){
+        foreach ($keys as $key ) {
+            unset($array[$key]);
+        }
+        return $array;
     }
 
     public function prepareForRequest($persistTutor=false, $persistEstudiantes=0, $totalEstudiantes=2)
@@ -42,11 +58,18 @@ class TrabajoGradoFactory extends Factory
         foreach($estudiantes as &$estudiante){
             $estudiante["carrera_id"] = Carrera::factory()->for(Facultad::factory())->create()->id;
         }
+        $this->unsets += ["filename", "tutor_id"];
 
         return $this->state([
             "documento" => UploadedFile::fake()->create('avatar.pdf', "1500", "application/pdf"),
             "tutor" => is_array($tutor) ? $tutor : $tutor->toArray(),
             "estudiantes" => $estudiantes
         ]);
+    }
+
+    public function newInstance(array $arguments = []){
+        $instance = parent::newInstance($arguments);
+        $instance->unsets = $this->unsets;
+        return $instance;
     }
 }

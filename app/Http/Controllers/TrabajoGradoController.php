@@ -82,7 +82,6 @@ class TrabajoGradoController extends Controller
 
         $documento = $request->file("documento");
         $payload["filename"] = $documento->store("trabajos de grado");
-        $payload["codigo"] = Carbon::today()->year . '/' . (TrabajoGrado::count() + 1);
 
         $tutor_id = $payload["tutor"]["id"] ?? Tutor::create($payload["tutor"])->id;
         $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor_id]);
