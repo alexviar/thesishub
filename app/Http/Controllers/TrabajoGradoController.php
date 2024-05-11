@@ -7,9 +7,8 @@ use App\Models\Estudiante;
 use App\Models\TrabajoGrado;
 use App\Models\Tutor;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
 {
@@ -41,7 +40,7 @@ class TrabajoGradoController extends Controller
         return $request->validate([
             "tema" => "required|string",
             "resumen" => "required|string",
-            "fecha_defensa" => "required|date|before_or_equal:".date('Y-m-d'),
+            "fecha_defensa" => "required|date|before_or_equal:".Date::now()->toDateString(),
             "documento" => "required|file|mimetypes:application/pdf",
 
             "tutor.id" => "nullable|exists:tutores,id",
