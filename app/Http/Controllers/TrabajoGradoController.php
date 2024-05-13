@@ -122,6 +122,6 @@ class TrabajoGradoController extends Controller
             // otras claves y valores que necesites
         ];
         
-        return view('trabajogrado.info', compact('ui','id','trabajoDeGrado'));
+        return view('trabajos_grado.info', compact('ui','id','trabajoDeGrado'));
     }
 }

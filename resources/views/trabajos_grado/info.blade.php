@@ -1,5 +1,5 @@
-<!-- @extends('layout.main') -->
 
+@extends("layouts.app")
 @section('content')
 <div class="container-fluid d-flex align-items-start" style="height: calc(100vh-73px); width:75%;  padding-top: 5%; ">
     <div class="row p-5 bg-white border shadow-lg" style="width:100%; border-radius:20px;">
@@ -19,7 +19,7 @@
             <h2>Metadatos</h2>
             <h3>Formato disponible</h3>
             <div class="ps-4">
-                <a target="_blank" href="{{route('trabajo_grado.descargar',['filename'=> $trabajoDeGrado->filename])}}" class="btn btn-outline-secondary">
+                <a target="_blank" href="{{route('trabajos_grado.descargar',['filename'=> $trabajoDeGrado->filename])}}" class="btn btn-outline-secondary">
                     <i class="fa-solid fa-file-pdf"></i>
                     PDF
                 </a>
