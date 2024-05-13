@@ -54,7 +54,7 @@
                             <label for="codigo-tutor" class="form-label">Código</label>
                             <div class="input-group mb-3">
                                 <input id="codigo-tutor" class="form-control" name="tutor[codigo]" value="{{optional(old('tutor'))['codigo']}}">
-                                <button class="btn btn-outline-secondary" type="button" onclick="buscarTutor(event)">
+                                <button id="buscar-tutor" class="btn btn-outline-secondary" type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                                     </svg>
@@ -78,7 +78,7 @@
             <legend>Estudiantes</legend>
             <div id="estudiantes-fieldset">
             </div>
-            <button type="button" class="btn btn-primary" onclick="agregarEstudiantes()">Agregar</button>
+            <button id="agregar-estudiantes" type="button" class="btn btn-primary">Agregar</button>
         </fieldset>
 
         <div class="row">
@@ -90,8 +90,11 @@
 </div>
 
 @endsection
+@include('components.searchable_select')
 @push("scripts")
-<script>
+@vite('resources/js/trabajos_grado/EstudianteItem.js')
+<script type="module">
+    import { EstudianteItem } from "{{Vite::asset('resources/js/trabajos_grado/EstudianteItem.js')}}";
     var estudiantes = <?php echo json_encode(old("estudiantes") ?? [
         [
             'id'=> '',
@@ -129,6 +132,8 @@
     }
 
     window.addEventListener("load", function() {
+        document.getElementById("agregar-estudiantes").addEventListener("click", agregarEstudiantes)
+        document.getElementById("buscar-tutor").addEventListener("click", buscarTutor)
         renderEstudiantes();
     });
 
@@ -148,88 +153,24 @@
     }
 
     function renderEstudiantes() {
+        const container = document.getElementById("estudiantes-fieldset");
         for (let i in estudiantes) {
-            const prefixId = `estudiante-${i}`
             let estudiante = estudiantes[i];
-            const container = document.getElementById("estudiantes-fieldset");
-            const component = document.createElement("div");
-            component.className = "rounded p-3 mb-3";
-            component.style = "background-color:rgba(0,0,0,0.05)";
-            let row = document.createElement("div");
-            row.classList.add("row");
-            let formGroup, controlId;
-
-            component.innerHTML = `<div class="row"><div class="col-auto ms-auto">Estudiante #${+i+1}</div></div>`
-
-            const hiddenInput = document.createElement("input")
-            component.appendChild(hiddenInput)
-            hiddenInput.id = `${prefixId}-id`
-            hiddenInput.type = "hidden"
-            hiddenInput.name = `estudiantes[${i}][id]`;
-            hiddenInput.value = estudiantes[i].id ?? "";
-            hiddenInput.addEventListener("change", function(e) {
-                estudiantes[i].id = event.target.value;
+            const estudianteItem = new EstudianteItem(i)
+            estudianteItem.setValue(estudiante)
+            estudianteItem.setCarreras(carreras)
+            estudianteItem.setOnChange((value) => {
+                estudianteItem.setValue(value)
+                estudiantes[i] = value
             })
-
-            formGroup = document.createElement("div");
-            formGroup.className = "col-lg-3 col-md-6 mb-3";
-            label = document.createElement("label");
-            label.classList.add("form-label");
-            controlId = `${prefixId}-nro-registro`
-            label.for = controlId;
-            label.innerHTML = "Nro. de Registro";
-            input = document.createElement("input");
-            input.id = controlId;
-            input.classList.add("form-control");
-            input.name = `estudiantes[${i}][nro_registro]`;
-            input.value = estudiantes[i].nro_registro;
-            input.addEventListener("change", function(event) {
-                estudiantes[i].nro_registro = event.target.value;
-            });
-            inputGroup = document.createElement("div");
-            inputGroup.classList.add("input-group")
-            inputGroup.classList.add("mb-3")
-            inputGroup.appendChild(input)
-            let inputGroupButton = document.createElement("button")
-            inputGroupButton.type = "button"
-            inputGroupButton.classList.add("btn")
-            inputGroupButton.classList.add("btn-outline-secondary")
-            inputGroupButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-            </svg>`
-            inputGroup.appendChild(inputGroupButton)
-            formGroup.appendChild(label);
-            formGroup.appendChild(inputGroup);
-            row.appendChild(formGroup);
-            component.appendChild(row)
-
-            row = document.createElement("div")
-            row.classList.add("div")
-
-            formGroup = document.createElement("div");
-            formGroup.className = "col-12 mb-3";
-            label = document.createElement("label");
-            label.classList.add("form-label");
-            controlId = `${prefixId}-nombre-completo`
-            label.for = controlId;
-            label.innerHTML = "Nombre completo";
-            input = document.createElement("input");
-            input.id = controlId;
-            input.classList.add("form-control");
-            input.name = `estudiantes[${i}][nombre_completo]`;
-            input.value = estudiantes[i].nombre_completo
-            input.readOnly = true;
-            input.addEventListener("change", function(event) {
-                estudiantes[i].nombre_completo = event.target.value;
-            });
-            formGroup.appendChild(label);
-            formGroup.appendChild(input);
-            row.appendChild(formGroup);
-
-            inputGroupButton.addEventListener("click", async (e) => {
-                const value = e.currentTarget.previousSibling.value
-                const input = document.getElementById(`${prefixId}-nombre-completo`)
-                const hiddenInput = document.getElementById(`${prefixId}-id`)
+            estudianteItem.setOnQuitar(() => {
+                estudiantes.splice(i, 1);
+                container.innerHTML = "";
+                renderEstudiantes();
+            })
+            estudianteItem.setOnSearch(async (value) => {
+                const input = estudianteItem.inputs["nombre_completo"]//document.getElementById(`${prefixId}-nombre-completo`)
+                const hiddenInput = estudianteItem.inputs["id"]//document.getElementById(`${prefixId}-id`)
                 if (!value) return;
 
                 const response = await fetch("/estudiantes/" + value)
@@ -249,47 +190,7 @@
                     input.readOnly = true
                 }
             })
-
-            formGroup = document.createElement("div");
-            formGroup.className = "col-12 mb-3";
-            label = document.createElement("label");
-            label.classList.add("form-label");
-            controlId = `carrera-${i}`
-            label.for = controlId;
-            label.innerHTML = "Carrera";
-            formGroup.appendChild(label);
-            select = document.createElement("div");
-            select.innerHTML = `@include("components.searchable_select")`;
-            select.id = controlId
-            initializeSelector(select, {
-                name: `estudiantes[${i}][carrera_id]`,
-                value: estudiantes[i].carrera_id,
-                onChange: function(id) {
-                    estudiantes[i].carrera_id = id;
-                },
-                options: carreras
-            })
-            formGroup.appendChild(select);
-            row.appendChild(formGroup)
-
-            function quitar() {
-                estudiantes.splice(i, 1);
-                container.innerHTML = "";
-                renderEstudiantes();
-            }
-
-            const btnQuitar = document.createElement("button");
-            btnQuitar.className = "btn btn-danger";
-            btnQuitar.innerHTML = "Quitar";
-            btnQuitar.type = "button";
-            btnQuitar.addEventListener("click", quitar);
-            const col = document.createElement("div");
-            col.classList.add("col-12");
-            col.appendChild(btnQuitar);
-            row.appendChild(col);
-            component.appendChild(row);
-
-            container.appendChild(component);
+            estudianteItem.render(container)
         }
     }
 </script>
