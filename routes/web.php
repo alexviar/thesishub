@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TrabajoGradoController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 Route::get('/', function () {
     return redirect(RouteServiceProvider::HOME);
@@ -58,3 +56,15 @@ Route::get('estudiantes/{nro_registro}', function ($nro_registro){
     }
     return response()->json($estudiante);
 });
+
+Route::get('login', function () {
+    return;
+})->name("login");
+
+Route::get('/buscar', function () {
+    return;
+})->name("trabajo_grado.buscar");
+
+Route::get('/publicar', function () {
+    return;
+})->name("trabajo_grado.publicar");
