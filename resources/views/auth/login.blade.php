@@ -5,7 +5,7 @@
     <div class="card bg-white" style="width: 100%; max-width: 720px; border-radius: 1rem;">
         <div class="row gx-0">
             <div class="col-md-6 d-none d-md-block">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="login form" class="img-fluid" style="object-fit:cover;height:100%;border-radius: 1rem 0 0 1rem;" />
+                <img src="{{asset('img/login.jpeg')}}" alt="login form" class="img-fluid" style="object-fit:cover;height:100%;border-radius: 1rem 0 0 1rem;" />
             </div>
             <div class="col-md-6 d-flex align-items-center">
                 <div class="card-body p-4 p-lg-5">
