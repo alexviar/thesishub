@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TrabajoGrado;
 use Illuminate\Http\Request;
 
 class TrabajoGradoController extends Controller
@@ -14,6 +15,17 @@ class TrabajoGradoController extends Controller
     public function index()
     {
         return view('trabajogrado.index');
+    }
+    public function descargar($filename)
+    {
+        
+        $rutaArchivo = storage_path('app/trabajos_de_grado/' . $filename);
+        return response()->stream(function () use ($rutaArchivo) {
+            readfile($rutaArchivo);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $rutaArchivo . '"',
+        ]);
     }
 
     /**
@@ -45,7 +57,14 @@ class TrabajoGradoController extends Controller
      */
     public function show($id)
     {
-        //
+        $trabajoDeGrado = TrabajoGrado::with('estudiantes', 'carreras', 'tutor')->find($id);
+        $ui = [
+            "title" => "Informacion",
+            
+            // otras claves y valores que necesites
+        ];
+        
+        return view('trabajogrado.info', compact('ui','id','trabajoDeGrado'));
     }
 
     /**

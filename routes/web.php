@@ -15,7 +15,12 @@ use App\Http\Controllers\TrabajoGradoController;
 */
 
 Route::get('trabajogrado',[TrabajoGradoController::class,'index']);
+Route::get('trabajogrado/{id}', [TrabajoGradoController::class, 'show']);
+Route::get('trabajogrado/buscar', [TrabajoGradoController::class, 'buscar'])->name('trabajo_grado.buscar');
+Route::get('trabajogrado/publicar', [TrabajoGradoController::class, 'publicar'])->name('trabajo_grado.publicar');
+Route::get('trabajogrado/{filename}/descargar', [TrabajoGradoController::class, 'descargar'])->name('trabajo_grado.descargar');
 
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/', function () {
     return view('welcome');
 });

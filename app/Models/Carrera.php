@@ -12,4 +12,13 @@ class Carrera extends Model
     protected $fillable = [
         "nombre"
     ];
+    public function facultad()
+    {
+        return $this->belongsTo(Facultad::class);
+    }
+
+    public function trabajosGrado()
+    {
+        return $this->belongsToMany(TrabajoGrado::class, 'carrera_estudiante_trabajo_grado');
+    }
 }
