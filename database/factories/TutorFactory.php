@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Tutor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,13 +14,11 @@ class TutorFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    protected $model = Tutor::class;
-
     public function definition()
     {
         return [
-            'codigo' => $this->faker->unique()->numerify('TUT#####'),
-            'nombre_completo' => $this->faker->name,
+            "codigo" => $this->faker->lexify("?????????"),
+            "nombre_completo" => $this->faker->firstName() . " " . $this->faker->lastName() . " " . $this->faker->lastName(),
         ];
     }
 }

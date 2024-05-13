@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Estudiante>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Facultad>
  */
-class EstudianteFactory extends Factory
+class FacultadFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,7 @@ class EstudianteFactory extends Factory
     public function definition()
     {
         return [
-            "nro_registro" => $this->faker->numerify('############'),
-            "nombre_completo" => $this->faker->name()
+            "nombre" => 'Facultad de '.$this->faker->words(4, true)
         ];
     }
 }
