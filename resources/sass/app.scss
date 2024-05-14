@@ -6,3 +6,9 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+a:has(svg) {
+    display: inline-flex !important;
+    align-items: center;
+    column-gap: 0.5em;
+}

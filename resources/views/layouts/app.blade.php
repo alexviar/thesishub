@@ -11,7 +11,6 @@
 
     @vite('resources/sass/app.scss')
     @stack("styles")
-    <script src="https://kit.fontawesome.com/eaa05c36b6.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-light">
     <div id="app">
