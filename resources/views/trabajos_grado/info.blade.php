@@ -21,7 +21,7 @@
             <h2 class="fs-5 mb-3">Metadatos</h2>
             <h3 class="fs-6 mb-0">Formato disponible</h3>
             <div class="ps-4 py-3">
-                <a target="_blank" href="{{route('trabajos_grado.descargar',['filename'=> $trabajoDeGrado->filename])}}" class="btn btn-outline-secondary">
+                <a target="_blank" href="{{$trabajoDeGrado->urlDescarga}}" class="btn btn-outline-secondary">
                     <i class="fa-solid fa-file-pdf"></i>
                     PDF
                 </a>

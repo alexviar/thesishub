@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
 {
+    const DIRECTORIO = 'trabajos_grado';
+
     public function index(){
         return view('trabajos_grado.index');
     }
@@ -80,7 +82,7 @@ class TrabajoGradoController extends Controller
         $payload = $this->validateStoreRequest($request);
 
         $documento = $request->file("documento");
-        $payload["filename"] = $documento->store("trabajos de grado");
+        $payload["filename"] = $documento->store(self::DIRECTORIO);
 
         $tutor_id = $payload["tutor"]["id"] ?? Tutor::create($payload["tutor"])->id;
         $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor_id]);
@@ -104,7 +106,8 @@ class TrabajoGradoController extends Controller
 
     public function descargar($filename)
     {
-        $rutaArchivo = storage_path('app/trabajos_de_grado/' . $filename);
+        $directorio = self::DIRECTORIO;
+        $rutaArchivo = storage_path("app/{$directorio}/$filename");
         return response()->stream(function () use ($rutaArchivo) {
             readfile($rutaArchivo);
         }, 200, [

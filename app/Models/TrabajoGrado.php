@@ -33,6 +33,16 @@ class TrabajoGrado extends Model
         });
     }
 
+    #region Mutators
+    public function urlDescarga(): Attribute{
+        return Attribute::make(
+            get: fn() => route('trabajos_grado.descargar', [
+                'filename' => basename($this->filename)
+            ])
+        );
+    }
+    #endregion
+
     #region Relationships
     public function tutor(): BelongsTo{
         return $this->belongsTo(Tutor::class);
