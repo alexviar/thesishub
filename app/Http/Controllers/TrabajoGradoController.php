@@ -73,6 +73,7 @@ class TrabajoGradoController extends Controller
         }
 
         $resultados = $query->get();
+        $resultados->append('url_descarga');
         $resultados->each->truncarResumen(500);
         // Devolver los resultados como JSON en la respuesta
         return response()->json($resultados);

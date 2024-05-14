@@ -42,7 +42,7 @@
         <div class="col-md-8">
             <!-- Listado de registros -->
             <div>
-                <div><!-- Se encontraron ### resultados -->No se encontraron resultados</div>
+                <div><!-- Se encontraron ### resultados --></div>
                 <div id="results-container">
 
                 </div>
@@ -101,11 +101,17 @@
     }
 
     function createTrabajoHTML(trabajo) {
+        const showUrlTemplate = `{!!Str::replace('trabajo.id', '${trabajo.id}', route('trabajos_grado.show', ['id' => 'trabajo.id']))!!}`;
         return `
             <div class="mb-3">
-                <a href="">
-                    ${trabajo.codigo}
-                </a>
+                <div class="d-flex">
+                    <a href="${showUrlTemplate}">
+                        ${trabajo.codigo}
+                    </a>
+                    <a class="ms-2 me-auto" href="${trabajo.url_descarga}">
+                        (PDF)
+                    </a>
+                </div>
                 <div style="font-weight:500">${trabajo.tema}</div>
                 <div class="my-1">
                     ${trabajo.estudiantes.map((estudiante) => {

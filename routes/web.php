@@ -38,7 +38,7 @@ Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->grou
     Route::get('buscar', 'buscar')->name("trabajos_grado.buscar");   
     Route::middleware('auth')->get('publicar', 'create')->name("trabajos_grado.publicar");    
     Route::middleware('auth')->post('publicar', 'store');
-    Route::get('{id}', 'show');
+    Route::get('{id}', 'show')->name('trabajos_grado.show');
     Route::get('descargar/{filename}', 'descargar')->name('trabajos_grado.descargar');
 });
 
