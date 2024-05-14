@@ -7,15 +7,76 @@ use App\Models\Estudiante;
 use App\Models\TrabajoGrado;
 use App\Models\Tutor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
 {
     const DIRECTORIO = 'trabajos_grado';
 
-    public function index(){
+    /**
+     * Muestra la vista principal de trabajos de grado.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index()
+    {
         return view('trabajos_grado.index');
+    }
+
+    /**
+     * Realiza una búsqueda de trabajos de grado según los parámetros especificados.
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function buscar(Request $request)
+    {      
+        // Obtener parámetros de búsqueda del request
+        $params = $request->only(['keyword', 'theme', 'author', 'tutor', 'start_date', 'end_date']);
+
+        // Crear una consulta base para TrabajoGrado
+        $query = TrabajoGrado::with("estudiantes");
+
+        // Aplicar filtros según los parámetros recibidos
+        if (!empty($params['theme'])) {
+            // Filtrar por tema del trabajo de grado
+            $query->where('tema', 'like', '%' . $params['theme'] . '%');
+        }
+
+        if (!empty($params['keyword'])) {
+            // Filtrar por palabra clave en el resumen
+            $query->where('resumen', 'like', '%' . $params['keyword'] . '%');
+        }
+
+        if (!empty($params['start_date'])) {
+            // Filtrar por fecha de defensa mínima
+            $query->whereDate('fecha_defensa', '>=', $params['start_date']);
+        }
+
+        if (!empty($params['end_date'])) {
+            // Filtrar por fecha de defensa máxima
+            $query->whereDate('fecha_defensa', '<=', $params['end_date']);
+        }
+
+        // Aplicar filtro por tutor si se especifica
+        if (!empty($params['tutor'])) {
+            $query->whereHas('tutor', function($query) use($params){
+                $query->where('nombre_completo', 'like', '%' . $params['tutor'] . '%');
+            });
+        }
+
+        // Aplicar filtro por autor si se especifica
+        if (!empty($params['author'])) {
+            $query->whereHas('estudiantes', function($query) use($params){
+                $query->where('nombre_completo', 'like', '%' . $params['author'] . '%');
+            });
+        }
+
+        $resultados = $query->get();
+        $resultados->append('url_descarga');
+        $resultados->each->truncarResumen(500);
+        // Devolver los resultados como JSON en la respuesta
+        return response()->json($resultados);
     }
 
     function prepareCarrerasForDropdown(){

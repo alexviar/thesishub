@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return redirect(RouteServiceProvider::HOME);
 });
@@ -33,11 +34,11 @@ Auth::routes(
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 
 Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->group(function(){
-
-    Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
+    Route::get('', 'index');
+    Route::get('buscar', 'buscar')->name("trabajos_grado.buscar");   
     Route::middleware('auth')->get('publicar', 'create')->name("trabajos_grado.publicar");    
     Route::middleware('auth')->post('publicar', 'store');
-    Route::get('{id}', 'show');
+    Route::get('{id}', 'show')->name('trabajos_grado.show');
     Route::get('descargar/{filename}', 'descargar')->name('trabajos_grado.descargar');
 });
 
