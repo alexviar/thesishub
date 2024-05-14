@@ -73,7 +73,7 @@ async function handleFormSubmit(event) {
     try {
         const formData = new FormData(event.target);
         const queryParams = new URLSearchParams(formData).toString();
-        const url = `{{ route("trabajos.buscar") }}?${queryParams}`;
+        const url = `{{ route("trabajos_grado.buscar") }}?${queryParams}`;
 
         const trabajos = await fetchData(url);
 

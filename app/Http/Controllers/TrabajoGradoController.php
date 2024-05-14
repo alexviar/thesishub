@@ -18,7 +18,7 @@ class TrabajoGradoController extends Controller
      */
     public function index()
     {
-        return view('trabajogrado.index');
+        return view('trabajos_grado.index');
     }
 
     /**

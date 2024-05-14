@@ -14,8 +14,8 @@ use App\Http\Controllers\TrabajoGradoController;
 |
 */
 
-Route::get('trabajogrado',[TrabajoGradoController::class,'index']);
-Route::get('/buscar-trabajos', [TrabajoGradoController::class,'buscar'])->name('trabajos.buscar');
+Route::get('trabajos-grado',[TrabajoGradoController::class,'index']);
+Route::get('trabajos-grado/buscar', [TrabajoGradoController::class,'buscar'])->name('trabajos_grado.buscar');
 
 Route::get('/', function () {
     return view('welcome');
