@@ -50,11 +50,3 @@
     </div>
 </div>
 @endsection
-
-@push('styles')
-    <style>
-        .mb-n2 {
-            margin-bottom: -0.75rem;
-        }
-    </style>
-@endpush
