@@ -56,15 +56,3 @@ Route::get('estudiantes/{nro_registro}', function ($nro_registro){
     }
     return response()->json($estudiante);
 });
-
-Route::get('login', function () {
-    return;
-})->name("login");
-
-Route::get('/buscar', function () {
-    return;
-})->name("trabajo_grado.buscar");
-
-Route::get('/publicar', function () {
-    return;
-})->name("trabajo_grado.publicar");

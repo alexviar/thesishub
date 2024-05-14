@@ -104,7 +104,6 @@ class TrabajoGradoController extends Controller
 
     public function descargar($filename)
     {
-        
         $rutaArchivo = storage_path('app/trabajos_de_grado/' . $filename);
         return response()->stream(function () use ($rutaArchivo) {
             readfile($rutaArchivo);
@@ -113,6 +112,7 @@ class TrabajoGradoController extends Controller
             'Content-Disposition' => 'inline; filename="' . $rutaArchivo . '"',
         ]);
     }
+
     public function show($id)
     {
         $trabajoDeGrado = TrabajoGrado::with('estudiantes', 'carreras', 'tutor')->find($id);
