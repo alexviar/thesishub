@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layout.app')
 @section('content')
 <div class="container bg-white my-4 p-4 shadow-sm rounded" style="min-height:80vh">
     <div class="row align-items-stretch">

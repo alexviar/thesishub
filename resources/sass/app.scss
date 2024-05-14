@@ -1,0 +1,14 @@
+// Fonts
+// @import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+a:has(svg) {
+    display: inline-flex !important;
+    align-items: center;
+    column-gap: 0.5em;
+}
