@@ -1,6 +1,5 @@
 @extends('layout.main')
 @section('content')
-<br>
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -59,7 +58,7 @@
     </div>
 </div>
 @endsection
-
+@push("scripts")    
 <script>
    document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#form-busquedatrabajo');
@@ -124,4 +123,5 @@ function createTrabajoHTML(trabajo) {
     `;
 }
 </script>
+@endpush
 
