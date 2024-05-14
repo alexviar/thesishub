@@ -7,7 +7,6 @@ use App\Models\Estudiante;
 use App\Models\TrabajoGrado;
 use App\Models\Tutor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
@@ -61,15 +60,16 @@ class TrabajoGradoController extends Controller
 
         // Aplicar filtro por tutor si se especifica
         if (!empty($params['tutor'])) {
-            $tutorIds = Tutor::where('nombre_completo', 'like', '%' . $params['tutor'] . '%')->pluck('id');
-            $query->whereIn('tutor_id', $tutorIds);
+            $query->whereHas('tutor', function($query) use($params){
+                $query->where('nombre_completo', 'like', '%' . $params['tutor'] . '%');
+            });
         }
 
         // Aplicar filtro por autor si se especifica
         if (!empty($params['author'])) {
-            $estudianteIds = Estudiante::where('nombre_completo', 'like', '%' . $params['author'] . '%')->pluck('id');
-            $trabajosGradoIds = CarreraEstudianteTrabajoGrado::whereIn('estudiante_id', $estudianteIds)->pluck('trabajo_grado_id');
-            $query->whereIn('id', $trabajosGradoIds);
+            $query->whereHas('estudiantes', function($query) use($params){
+                $query->where('nombre_completo', 'like', '%' . $params['author'] . '%');
+            });
         }
 
         // Devolver los resultados como JSON en la respuesta
