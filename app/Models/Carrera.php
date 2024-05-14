@@ -13,10 +13,13 @@ class Carrera extends Model
     protected $fillable = [
         "nombre"
     ];
-
-    #region Relationship
-    public function facultad(): BelongsTo{
+    public function facultad()
+    {
         return $this->belongsTo(Facultad::class);
     }
-    #endregion    
+
+    public function trabajosGrado()
+    {
+        return $this->belongsToMany(TrabajoGrado::class, 'carrera_estudiante_trabajo_grado');
+    }
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
 {
+    const DIRECTORIO = 'trabajos_grado';
+
     public function index(){
         return view('trabajos_grado.index');
     }
@@ -80,7 +82,7 @@ class TrabajoGradoController extends Controller
         $payload = $this->validateStoreRequest($request);
 
         $documento = $request->file("documento");
-        $payload["filename"] = $documento->store("trabajos de grado");
+        $payload["filename"] = $documento->store(self::DIRECTORIO);
 
         $tutor_id = $payload["tutor"]["id"] ?? Tutor::create($payload["tutor"])->id;
         $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor_id]);
@@ -100,5 +102,29 @@ class TrabajoGradoController extends Controller
             ]);
         }
 
+    }
+
+    public function descargar($filename)
+    {
+        $directorio = self::DIRECTORIO;
+        $rutaArchivo = storage_path("app/{$directorio}/$filename");
+        return response()->stream(function () use ($rutaArchivo) {
+            readfile($rutaArchivo);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $rutaArchivo . '"',
+        ]);
+    }
+
+    public function show($id)
+    {
+        $trabajoDeGrado = TrabajoGrado::with('estudiantes', 'carreras', 'tutor')->find($id);
+        $ui = [
+            "title" => "Informacion",
+            
+            // otras claves y valores que necesites
+        ];
+        
+        return view('trabajos_grado.info', compact('ui','id','trabajoDeGrado'));
     }
 }

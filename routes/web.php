@@ -37,6 +37,8 @@ Route::controller(TrabajoGradoController::class)->prefix('trabajos-grado')->grou
     Route::get('buscar', 'index')->name("trabajos_grado.buscar");    
     Route::middleware('auth')->get('publicar', 'create')->name("trabajos_grado.publicar");    
     Route::middleware('auth')->post('publicar', 'store');
+    Route::get('{id}', 'show');
+    Route::get('descargar/{filename}', 'descargar')->name('trabajos_grado.descargar');
 });
 
 Route::get('tutores/{codigo}', function ($codigo){

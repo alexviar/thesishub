@@ -10,13 +10,13 @@ class Tutor extends Model
     use HasFactory;
 
     public $table = "tutores";
-
     protected $fillable = [
-        "codigo",
-        "nombre_completo"
+        'codigo',
+        'nombre_completo',
     ];
 
-    #region Relationships
-    
-    #endregion
+    public function trabajosGrado()
+    {
+        return $this->hasMany(TrabajoGrado::class);
+    }
 }
