@@ -35,7 +35,7 @@ class TrabajoGradoController extends Controller
         $params = $request->only(['keyword', 'theme', 'author', 'tutor', 'start_date', 'end_date']);
 
         // Crear una consulta base para TrabajoGrado
-        $query = TrabajoGrado::query();
+        $query = TrabajoGrado::with("estudiantes");
 
         // Aplicar filtros según los parámetros recibidos
         if (!empty($params['theme'])) {

@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 @section('content')
 <div class="container bg-white my-4 p-4 shadow-sm rounded" style="min-height:80vh">
     <div class="row align-items-stretch">
@@ -107,6 +107,11 @@
                     ${trabajo.codigo}
                 </a>
                 <div style="font-weight:500">${trabajo.tema}</div>
+                <div class="my-1">
+                    ${trabajo.estudiantes.map((estudiante) => {
+                        return `<div><em>${estudiante.nombre_completo}</em></div>`
+                    }).join('\n')}
+                </div>
                 <p>${trabajo.resumen.substring(0,500)}</p>                                            
             </div>
         `;
