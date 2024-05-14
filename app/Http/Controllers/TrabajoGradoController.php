@@ -72,8 +72,10 @@ class TrabajoGradoController extends Controller
             });
         }
 
+        $resultados = $query->get();
+        $resultados->each->truncarResumen(500);
         // Devolver los resultados como JSON en la respuesta
-        return response()->json($query->get());
+        return response()->json($resultados);
     }
 
     function prepareCarrerasForDropdown(){

@@ -112,7 +112,7 @@
                         return `<div><em>${estudiante.nombre_completo}</em></div>`
                     }).join('\n')}
                 </div>
-                <p>${trabajo.resumen.substring(0,500)}</p>                                            
+                <p>${trabajo.resumen}</p>                                            
             </div>
         `;
     }

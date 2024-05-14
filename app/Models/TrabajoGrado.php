@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Date;
 
 class TrabajoGrado extends Model
@@ -24,6 +24,7 @@ class TrabajoGrado extends Model
         'fecha_defensa',
         'tutor_id'
     ];
+
     protected static function booted(): void
     {
         static::creating(function (TrabajoGrado $trabajoGrado) {            
@@ -31,6 +32,15 @@ class TrabajoGrado extends Model
             $counter = parent::where('codigo', 'like', $year.'/%')->count() + 1;
             $trabajoGrado->attributes['codigo'] = "$year/$counter";
         });
+    }
+
+    public function truncarResumen($length){
+        $resumenLength = Str::length($this->resumen);
+        $this->resumen = Str::substr($this->resumen, 0, $length);
+        $this->resumen = Str::beforeLast($this->resumen, ' ');
+        if($resumenLength > $length){
+            $this->resumen .= '...';
+        }
     }
 
     #region Mutators
