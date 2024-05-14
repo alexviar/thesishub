@@ -1,3 +1,4 @@
+import '../../sass/components/searchable_select.scss';
 export class SearchableSelect {
     constructor({
         id,
