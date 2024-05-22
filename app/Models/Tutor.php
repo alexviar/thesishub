@@ -9,7 +9,7 @@ class Tutor extends Model
 {
     use HasFactory;
 
-    public $table = "tutores";
+    public $table = "tutores"; 
     protected $fillable = [
         'codigo',
         'nombre_completo',
