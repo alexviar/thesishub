@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Modules\Auth\Database\Seeders\AuthDatabaseSeeder;
+use App\Modules\Biblioteca\Database\Seeders\BibliotecaDatabaseSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,9 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(UsuarioSeeder::class);
-        $this->call(FacultadYCarrerasSeeder::class);
         // \App\Models\User::factory(10)->create();
+
+        $this->call(AuthDatabaseSeeder::class);
+        $this->call(BibliotecaDatabaseSeeder::class);
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

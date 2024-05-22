@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Usuario;
+use App\Modules\Auth\Models\Usuario;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -53,5 +53,22 @@ class AppServiceProvider extends ServiceProvider
                            ->symbols()
                            ->numbers();
         });
+        #region Para compatibilidad de los Factories con laravel-modules
+        \Illuminate\Database\Eloquent\Factories\Factory::guessFactoryNamesUsing(function (string $modelName) {
+            $namespace = \Illuminate\Support\Str::before($modelName, 'Models\\').'Database\\Factories\\';
+        
+            $modelName = \Illuminate\Support\Str::after($modelName, 'Models\\');
+        
+            return $namespace.$modelName.'Factory';
+        });
+        
+        \Illuminate\Database\Eloquent\Factories\Factory::guessModelNamesUsing(function ($factory) {
+            $namespacedFactoryBasename = \Illuminate\Support\Str::replaceLast(
+                'Factory', '', \Illuminate\Support\Str::replaceFirst('Database\\Factories\\', 'Models\\', get_class($factory))
+            );
+        
+            return $namespacedFactoryBasename;
+        });
+        #endregion
     }
 }

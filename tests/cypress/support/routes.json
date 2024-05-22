@@ -123,67 +123,8 @@
   "login": {
     "name": "login",
     "domain": null,
-    "action": "App\\Http\\Controllers\\Auth\\LoginController@showLoginForm",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\LoginController@showLoginForm",
     "uri": "login",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "logout": {
-    "name": "logout",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\Auth\\LoginController@logout",
-    "uri": "logout",
-    "method": [
-      "POST"
-    ]
-  },
-  "trabajos_grado.index": {
-    "name": "trabajos_grado.index",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\TrabajoGradoController@index",
-    "uri": "trabajos-grado",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "trabajos_grado.buscar": {
-    "name": "trabajos_grado.buscar",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\TrabajoGradoController@buscar",
-    "uri": "trabajos-grado/buscar",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "trabajos_grado.publicar": {
-    "name": "trabajos_grado.publicar",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\TrabajoGradoController@create",
-    "uri": "trabajos-grado/publicar",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "trabajos_grado.show": {
-    "name": "trabajos_grado.show",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\TrabajoGradoController@show",
-    "uri": "trabajos-grado/{id}",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "trabajos_grado.descargar": {
-    "name": "trabajos_grado.descargar",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\TrabajoGradoController@descargar",
-    "uri": "trabajos-grado/descargar/{filename}",
     "method": [
       "GET",
       "HEAD"
@@ -192,7 +133,7 @@
   "usuarios.index": {
     "name": "usuarios.index",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@index",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@index",
     "uri": "usuarios",
     "method": [
       "GET",
@@ -202,7 +143,7 @@
   "usuarios.create": {
     "name": "usuarios.create",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@create",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@create",
     "uri": "usuarios/crear",
     "method": [
       "GET",
@@ -212,7 +153,7 @@
   "usuarios.store": {
     "name": "usuarios.store",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@store",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@store",
     "uri": "usuarios",
     "method": [
       "POST"
@@ -221,7 +162,7 @@
   "usuarios.show": {
     "name": "usuarios.show",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@show",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@show",
     "uri": "usuarios/{usuario}",
     "method": [
       "GET",
@@ -231,7 +172,7 @@
   "usuarios.edit": {
     "name": "usuarios.edit",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@edit",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@edit",
     "uri": "usuarios/{usuario}/editar",
     "method": [
       "GET",
@@ -241,11 +182,61 @@
   "usuarios.update": {
     "name": "usuarios.update",
     "domain": null,
-    "action": "App\\Http\\Controllers\\UsuarioController@update",
+    "action": "App\\Modules\\Auth\\Http\\Controllers\\UsuarioController@update",
     "uri": "usuarios/{usuario}",
     "method": [
       "PUT",
       "PATCH"
+    ]
+  },
+  "trabajos_grado.index": {
+    "name": "trabajos_grado.index",
+    "domain": null,
+    "action": "App\\Modules\\Biblioteca\\Http\\Controllers\\TrabajoGradoController@index",
+    "uri": "trabajos-grado",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "trabajos_grado.buscar": {
+    "name": "trabajos_grado.buscar",
+    "domain": null,
+    "action": "App\\Modules\\Biblioteca\\Http\\Controllers\\TrabajoGradoController@buscar",
+    "uri": "trabajos-grado/buscar",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "trabajos_grado.publicar": {
+    "name": "trabajos_grado.publicar",
+    "domain": null,
+    "action": "App\\Modules\\Biblioteca\\Http\\Controllers\\TrabajoGradoController@create",
+    "uri": "trabajos-grado/publicar",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "trabajos_grado.show": {
+    "name": "trabajos_grado.show",
+    "domain": null,
+    "action": "App\\Modules\\Biblioteca\\Http\\Controllers\\TrabajoGradoController@show",
+    "uri": "trabajos-grado/{id}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "trabajos_grado.descargar": {
+    "name": "trabajos_grado.descargar",
+    "domain": null,
+    "action": "App\\Modules\\Biblioteca\\Http\\Controllers\\TrabajoGradoController@descargar",
+    "uri": "trabajos-grado/descargar/{filename}",
+    "method": [
+      "GET",
+      "HEAD"
     ]
   }
 }

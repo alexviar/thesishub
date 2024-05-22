@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Usuario;
+use App\Modules\Biblioteca\Database\Seeders\EstudianteSeeder;
+use App\Modules\Biblioteca\Database\Seeders\TrabajosGradoSeeder;
+use App\Modules\Biblioteca\Database\Seeders\TutorSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +20,6 @@ class DevSeeder extends Seeder
      */
     public function run()
     {
-        Usuario::factory(100)->create();
         $this->call(EstudianteSeeder::class);
         $this->call(TutorSeeder::class);
         $this->call(TrabajosGradoSeeder::class);
