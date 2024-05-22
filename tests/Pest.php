@@ -11,7 +11,10 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(Tests\TestCase::class)->beforeEach(function(){
+    $this->withoutVite();
+}
+)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
