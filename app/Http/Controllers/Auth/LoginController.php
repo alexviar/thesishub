@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/trabajos-grado/buscar';
+    protected $redirectTo = '/trabajos-grado';
 
     /**
      * Create a new controller instance.
@@ -49,7 +49,7 @@ class LoginController extends Controller
 
         $credentials = $request->only('username', 'password');
         // Intenta autenticar al usuario
-        if (Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             // El usuario ha sido autenticado correctamente
             return redirect()->intended($this->redirectTo);
         }else {
