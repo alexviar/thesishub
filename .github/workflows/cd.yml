@@ -24,4 +24,4 @@ jobs:
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
       run: |
-        sshpass -f password.txt ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /var/www/html && git pull && composer install --no-dev && php artisan migrate --force"
+        cd /var/www/html && echo "Hola mundo" > saludo.txt
