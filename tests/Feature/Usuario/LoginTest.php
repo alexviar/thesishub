@@ -15,7 +15,7 @@ it('Se pudo iniciar sesion con el usuario', function () {
     //validar si fue autenticado
     $this->assertAuthenticatedAs($usuario);
     //se pudo redirigir a dicha ruta?
-    $response->assertRedirect('/trabajos-grado/buscar');
+    $response->assertRedirect('/trabajos-grado');
 });
 
 it('No se puede iniciar sesion', function () {
