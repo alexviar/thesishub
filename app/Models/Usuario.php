@@ -9,6 +9,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Hash;
+
 /**
  * Class Usuario
  *
@@ -35,7 +38,7 @@ class Usuario extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['username','nombre_completo', 'estado', 'email', 'password', 'password-confirm', 'rol'];
+    protected $fillable = ['username','nombre_completo', 'estado', 'email', 'password', 'rol'];
 
 
     /**
@@ -47,17 +50,10 @@ class Usuario extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            //'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    function password():Attribute {
+        return Attribute::make(
+          set: fn($value) => Hash::make($value)
+        );
+     }
     
 }

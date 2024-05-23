@@ -19,8 +19,23 @@ class UsuarioFactory extends Factory
     {
         return [
             'nombre_completo' => fake()->name(),
+            'email' => fake()->email(),
+            'rol' => fake()->randomElement(['0','1']),
             'username' => fake()->userName(),
-            'password' => Hash::make('123123'), // password
+            'password' => '123123', // password
         ];
+    }
+
+    public function inactivo()
+    {
+        return $this->state([
+            'estado' => 'inactivo',
+        ]);
+    }
+    public function admin()
+    {
+        return $this->state([
+            'rol' => '1',
+        ]);
     }
 }

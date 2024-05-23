@@ -50,6 +50,14 @@ class LoginController extends Controller
         $credentials = $request->only('username', 'password');
         // Intenta autenticar al usuario
         if (Auth::attempt($credentials)) {
+            $usuario = Auth::user();
+            if ($usuario->estado =='inactivo'){
+                return back()->withErrors(
+                    [
+                        'estado' => 'El usuario esta inactivo, por favor contactese con un administrador.',
+                    ]
+                );
+            }
             // El usuario ha sido autenticado correctamente
             return redirect()->intended($this->redirectTo);
         }else {

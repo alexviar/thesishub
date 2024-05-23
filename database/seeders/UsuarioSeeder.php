@@ -19,12 +19,12 @@ class UsuarioSeeder extends Seeder
     {
         Usuario::create([
 
-            "username" => "paola",
-            "nombre_completo" => "paola",
+            "username" => "admin",
+            "nombre_completo" => "admin",
             "estado" => 'activo',
-            "email" => "paola@gmail.com",
-            "password" => Hash::make('1234567'),
-            "password-confirm" => Hash::make('1234567'),
+            "email" => "admin@gmail.com",
+            "password" => '12345678',
+            //"password-confirm" => Hash::make('1234567'),
             "rol" => 1,
 
         ]);

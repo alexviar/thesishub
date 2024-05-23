@@ -16,10 +16,11 @@ return new class extends Migration
         //modifica una tabla usuarios en la base de datos
         Schema::table('usuarios',function (Blueprint $table) {
             
-            $table->string('nombre')->nullable(false);
+           // $table->string('nombre')->nullable(false);
+         //  $table->unique('username');
             $table->string('email')->nullable(false);
-            $table->boolean('admin')->nullable(false)->defaultValue(false);
-            $table->string('estado')->nullable(false);
+            $table->string('rol')->nullable(false)->defaultValue(false);
+            $table->string('estado')->default('activo');
         });
     } 
         
@@ -33,7 +34,8 @@ return new class extends Migration
         Schema::table('usuarios',function (Blueprint $table) {
             
             $table->dropColumn('email');
-            $table->dropColumn('admin');
+            $table->dropColumn('rol');
+            $table->dropColumn('estado');
         });
     }
 };

@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsuarioStoreRequest;
+use App\Http\Requests\UsuarioUpdateRequest;
 use App\Models\Usuario;
 use App\Http\Requests\UsuarioRequest;
 use Illuminate\Http\Request;
@@ -13,6 +15,12 @@ use Illuminate\Http\Request;
  */
 class UsuarioController extends Controller
 {
+
+    public function authorize($ability, $arguments = [])
+    {
+        return $this->user()->rol==1;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -36,7 +44,7 @@ class UsuarioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UsuarioRequest $request)
+    public function store(UsuarioStoreRequest $request)
     {
         $data = $request->validated();
         $data['rol'] = $request->has('rol') ? 1 : 0;
@@ -71,7 +79,7 @@ class UsuarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UsuarioRequest $request, Usuario $usuario)
+    public function update(UsuarioUpdateRequest $request, Usuario $usuario)
     {
         $data = $request->validated();
         $data['rol'] = $request->has('rol') ? 1 : 0;

@@ -33,3 +33,15 @@ it('No se puede iniciar sesion', function () {
     // Verificar que el usuario no fue autenticado
     $this->assertGuest();
 });
+
+test('Usuario inactivos no pueden iniciar sesion', function() {
+    $usuario = Usuario::factory()->inactivo()->create();
+    
+    $response = $this->post('/login', [
+        'username' => $usuario->username,
+        'password' => "123123"
+    ]);
+
+    $response->assertSessionHasErrors(['estado']);
+
+});

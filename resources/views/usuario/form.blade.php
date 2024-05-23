@@ -30,7 +30,7 @@
 
         <div class="form-group mb-2 mb20">
             <label for="password" class="form-label col-form-label">{{ __('Password') }}</label>
-            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" {{$usuario->id? '':'required'}} autocomplete="new-password">
             @error('password')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -40,7 +40,7 @@
 
         <div class="form-group mb-2 mb20">
             <label for="password-confirm" class="form-label col-form-label">{{ __('Confirm Password') }}</label>
-            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" {{$usuario->id? '':'required'}} autocomplete="new-password">
         </div>
 
         <div class="form-group mb-2 mb20">
@@ -51,7 +51,8 @@
             {!! $errors->first('rol', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
     </div>
-    <div class="col-md-12 mt20 mt-2">
-        <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+    <div class="col-md-12 mt20 mt-2  d-flex justify-content-end">
+        <a class="btn btn-primary mr-2" href="{{ route('usuarios.index') }}">{{ __('Volver') }}</a>
+        <button type="submit" class="btn btn-primary ">{{ __('Guardar') }}</button>
     </div>
 </div>
