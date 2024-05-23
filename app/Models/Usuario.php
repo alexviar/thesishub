@@ -21,11 +21,9 @@ use Illuminate\Support\Facades\Hash;
  * @property $estado
  * @property $email
  * @property $password
- * @property $password_confirm
- * @property $rol
+ * @property $is_admin
  * @property $created_at
  * @property $updated_at
- * @property $deleted_at
  **/
 class Usuario extends Authenticatable
 {
@@ -38,22 +36,40 @@ class Usuario extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['username','nombre_completo', 'estado', 'email', 'password', 'rol'];
+    protected $fillable = ['username','nombre_completo', 'estado', 'email', 'password', 'is_admin'];
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-
-     protected $hidden = [
+    protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    private $estadosMap = [
+      1 => 'Activo',
+      2 => 'Inactivo'
+    ];
+
+    protected $attributes = [
+      'estado' => 1
+    ];
+
+    #region Accessors & Mutators
     function password():Attribute {
         return Attribute::make(
           set: fn($value) => Hash::make($value)
         );
-     }
+    }
+    
+    function isActivo():Attribute {
+      return Attribute::make(
+        get: fn(mixed $value, array $attributes) => $attributes['estado'] == 1
+      );
+    }
+    
+    function printableEstado():Attribute {
+      return Attribute::make(
+        get: fn(mixed $value, array $attributes) => $this->estadosMap[$attributes['estado']]
+      );
+    }
+    #endregion
     
 }

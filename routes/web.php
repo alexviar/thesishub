@@ -58,5 +58,5 @@ Route::get('estudiantes/{nro_registro}', function ($nro_registro){
     }
     return response()->json($estudiante);
 });
-Route::resource('usuarios', UsuarioController::class )->middleware(['auth','can:administrador']);
+Route::resource('usuarios', UsuarioController::class )->middleware(['auth','can:administrar-usuarios'])->except(['destroy']);
 

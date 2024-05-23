@@ -15,12 +15,12 @@ return new class extends Migration
     {
         //modifica una tabla usuarios en la base de datos
         Schema::table('usuarios',function (Blueprint $table) {
-            
-           // $table->string('nombre')->nullable(false);
-         //  $table->unique('username');
             $table->string('email')->nullable(false);
-            $table->string('rol')->nullable(false)->defaultValue(false);
-            $table->string('estado')->default('activo');
+            $table->boolean('is_admin')->defaultValue(false);
+            $table->boolean('estado')->default(1);
+            
+            $table->unique('username');
+            $table->unique('email');
         });
     } 
         
@@ -32,9 +32,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('usuarios',function (Blueprint $table) {
-            
+            $table->dropUnique('username');
+            $table->dropUnique('email');
             $table->dropColumn('email');
-            $table->dropColumn('rol');
+            $table->dropColumn('is_admin');
             $table->dropColumn('estado');
         });
     }

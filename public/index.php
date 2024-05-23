@@ -44,19 +44,12 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-// Create the application instance
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-// Create the kernel instance
 $kernel = $app->make(Kernel::class);
 
-// Capture the incoming request and handle it
 $response = $kernel->handle(
     $request = Request::capture()
-);
+)->send();
 
-// Send the response to the client's browser
-$response->send();
-
-// Terminate the request/response lifecycle
 $kernel->terminate($request, $response);

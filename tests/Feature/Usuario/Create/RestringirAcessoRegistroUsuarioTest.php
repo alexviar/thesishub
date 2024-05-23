@@ -13,9 +13,7 @@ it('Usuarios inactivos no pueden acceder al formulario para el registro de usuar
 
 it('Solo los administradores pueden acceder al formulario para el registro de usuarios', function () {
     /** @var \Tests\TestCase $this */
-    $usuario = Usuario::factory([
-        'rol' => '0'	
-    ])->create();
+    $usuario = Usuario::factory()->regular()->create();
     
     $response = $this->actingAs($usuario)->get('/usuarios/crear');
 

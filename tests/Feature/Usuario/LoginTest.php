@@ -6,7 +6,9 @@ use Tests\TestCase;
 
 it('Se pudo iniciar sesion con el usuario', function () {
     //generar mi usuario
-    $usuario = Usuario::factory()->create();
+    $usuario = Usuario::factory([
+        'password' => '123123'
+    ])->create();
     //envio al login el username y password
     $response = $this->post('/login', [
         'username' => $usuario->username,
@@ -34,12 +36,14 @@ it('No se puede iniciar sesion', function () {
     $this->assertGuest();
 });
 
-test('Usuario inactivos no pueden iniciar sesion', function() {
-    $usuario = Usuario::factory()->inactivo()->create();
+test('Usuarios inactivos no pueden iniciar sesion', function() {
+    $usuario = Usuario::factory([
+        'password' => '123123'
+    ])->inactivo()->create();
     
     $response = $this->post('/login', [
         'username' => $usuario->username,
-        'password' => "123123"
+        'password' => '123123'
     ]);
 
     $response->assertSessionHasErrors(['estado']);

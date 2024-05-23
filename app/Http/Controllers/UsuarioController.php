@@ -6,9 +6,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UsuarioStoreRequest;
 use App\Http\Requests\UsuarioUpdateRequest;
 use App\Models\Usuario;
-use App\Http\Requests\UsuarioRequest;
-use Illuminate\Http\Request;
-
 /**
  * Class UsuarioController
  * @package App\Http\Controllers
@@ -16,19 +13,15 @@ use Illuminate\Http\Request;
 class UsuarioController extends Controller
 {
 
-    public function authorize($ability, $arguments = [])
-    {
-        return $this->user()->rol==1;
-    }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $usuarios = Usuario::paginate();
-
-        return view('usuario.index', compact('usuarios'))
+        $usuarios = Usuario::latest('updated_at')->paginate();
+        $offset = $usuarios->firstItem(); 
+        
+        return view('usuarios.index', compact('usuarios', 'offset'))
             ->with('i', (request()->input('page', 1) - 1) * $usuarios->perPage());
     }
 
@@ -38,7 +31,7 @@ class UsuarioController extends Controller
     public function create()
     {
         $usuario = new Usuario();
-        return view('usuario.create', compact('usuario'));
+        return view('usuarios.create', compact('usuario'));
     }
 
     /**
@@ -47,12 +40,11 @@ class UsuarioController extends Controller
     public function store(UsuarioStoreRequest $request)
     {
         $data = $request->validated();
-        $data['rol'] = $request->has('rol') ? 1 : 0;
-    
+        $data['is_admin'] = $request->has('is_admin') ? 1 : 0;
+        
         Usuario::create($data);
-        //Usuario::create($request->validated());
         return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario created successfully.');
+            ->with('success', 'Usuario creado exitosamente.');
     }
     
 
@@ -63,7 +55,7 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
 
-        return view('usuario.show', compact('usuario'));
+        return view('usuarios.show', compact('usuario'));
     }
 
     /**
@@ -73,7 +65,7 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
 
-        return view('usuario.edit', compact('usuario'));
+        return view('usuarios.edit', compact('usuario'));
     }
 
     /**
@@ -82,23 +74,12 @@ class UsuarioController extends Controller
     public function update(UsuarioUpdateRequest $request, Usuario $usuario)
     {
         $data = $request->validated();
-        $data['rol'] = $request->has('rol') ? 1 : 0;
+        $data['is_admin'] = $request->has('is_admin') ? 1 : 0;
+        if(empty($data['password']))  unset($data['password']);
 
         $usuario->update($data);
 
         return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario updated successfully');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $usuario = Usuario::findOrFail($id);
-        $usuario->delete();
-
-        return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario deleted successfully');
+            ->with('success', 'Usuario actualizado exitosamente');
     }
 }

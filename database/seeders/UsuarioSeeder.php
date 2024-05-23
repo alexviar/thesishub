@@ -21,11 +21,10 @@ class UsuarioSeeder extends Seeder
 
             "username" => "admin",
             "nombre_completo" => "admin",
-            "estado" => 'activo',
+            "estado" => 1,
             "email" => "admin@gmail.com",
             "password" => '12345678',
-            //"password-confirm" => Hash::make('1234567'),
-            "rol" => 1,
+            "is_admin" => 1,
 
         ]);
     }
