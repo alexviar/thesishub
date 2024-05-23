@@ -48,10 +48,12 @@ test('crea un trabajo de grado con autores y tutor ya registrados', function () 
     $this->assertNotNull($registro);
     expect($registro->toArray())->toMatchArray(Arr::except($data, ["documento", "tutor", "estudiantes"]) + ["codigo" => "2024/1"]);
     expect($registro->tutor_id)->toBe($data["tutor"]["id"]);
-    expect($registro->estudiantes->map(fn ($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["id", "pivot.carrera_id"])))->toMatchArray(
-        Arr::map($data["estudiantes"], fn ($estudiante) => [
-            "id" => $estudiante["id"],
-            "pivot.carrera_id" =>  $estudiante["carrera_id"]
-        ])
-    );
+
+    $actualEstudiantes = $registro->estudiantes->map(fn ($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["id", "pivot.carrera_id"]));
+    $expectedEstudiantes = Arr::map($data["estudiantes"], fn ($estudiante) => [
+        "id" => $estudiante["id"],
+        "pivot.carrera_id" =>  $estudiante["carrera_id"]
+    ]);
+    var_dump($actualEstudiantes, $expectedEstudiantes);
+    expect($actualEstudiantes)->toMatchArray($expectedEstudiantes);
 });
