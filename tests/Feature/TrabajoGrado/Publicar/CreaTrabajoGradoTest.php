@@ -22,13 +22,15 @@ test('crea un trabajo de grado con autores y tutor no registrados', function () 
     $this->assertNotNull($registro);
     expect($registro->toArray())->toMatchArray(Arr::except($data, ["documento", "tutor", "estudiantes"]) + ["codigo" => "2024/1"]);
     expect($registro->tutor->toArray())->toMatchArray($data["tutor"]);
-    expect(Arr::map($registro->estudiantes->toArray(), fn ($estudiante) => Arr::only(Arr::dot($estudiante), ["nro_registro", "nombre_completo", "pivot.carrera_id"])))->toMatchArray(
-        Arr::map($data["estudiantes"], fn ($estudiante) => [
-            "nro_registro" => $estudiante["nro_registro"],
-            "nombre_completo" => $estudiante["nombre_completo"],
-            "pivot.carrera_id" =>  $estudiante["carrera_id"]
-        ])
-    );
+    $actualEstudiantes = $registro->estudiantes->map(fn ($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["nro_registro", "nombre_completo", "pivot.carrera_id"]))->toArray();
+
+    foreach($data["estudiantes"] as $expectedEstudiante){
+        expect( [
+            "nro_registro" => $expectedEstudiante["nro_registro"],
+            "nombre_completo" => $expectedEstudiante["nombre_completo"],
+            "pivot.carrera_id" =>  $expectedEstudiante["carrera_id"]
+        ])->toBeIn($actualEstudiantes);
+    }
 });
 
 test('crea un trabajo de grado con autores y tutor ya registrados', function () {
@@ -48,10 +50,13 @@ test('crea un trabajo de grado con autores y tutor ya registrados', function () 
     $this->assertNotNull($registro);
     expect($registro->toArray())->toMatchArray(Arr::except($data, ["documento", "tutor", "estudiantes"]) + ["codigo" => "2024/1"]);
     expect($registro->tutor_id)->toBe($data["tutor"]["id"]);
-    expect($registro->estudiantes->map(fn ($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["id", "pivot.carrera_id"])))->toMatchArray(
-        Arr::map($data["estudiantes"], fn ($estudiante) => [
-            "id" => $estudiante["id"],
-            "pivot.carrera_id" =>  $estudiante["carrera_id"]
-        ])
-    );
+
+    $actualEstudiantes = $registro->estudiantes->map(fn ($estudiante) => Arr::only(Arr::dot($estudiante->toArray()), ["id", "pivot.carrera_id"]))->toArray();
+
+    foreach($data["estudiantes"] as $expectedEstudiante){
+        expect( [
+            "id" => $expectedEstudiante["id"],
+            "pivot.carrera_id" =>  $expectedEstudiante["carrera_id"]
+        ])->toBeIn($actualEstudiantes);
+    }
 });
