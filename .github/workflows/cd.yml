@@ -14,10 +14,14 @@ jobs:
     - name: Install SSH client
       run: sudo apt-get install sshpass
 
+    - name: Write password to file
+      env:
+        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+      run: echo $SERVER_PASSWORD > password.txt
+
     - name: Deploy to server
       env:
         SERVER_USER: ${{ secrets.SERVER_USER }}
-        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
       run: |
         cd /var/www/html && echo "Hola mundo" > saludo.txt
