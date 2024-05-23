@@ -18,7 +18,15 @@ jobs:
       env:
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
       run: echo $SERVER_PASSWORD > password.txt
-
+      
+    - name: Debugging
+      env:
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+      run: |
+        echo "SERVER_USER: $SERVER_USER"
+        echo "SERVER_IP: $SERVER_IP"
+        
     - name: Deploy to server
       env:
         SERVER_USER: ${{ secrets.SERVER_USER }}
