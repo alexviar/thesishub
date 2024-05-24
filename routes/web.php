@@ -4,6 +4,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TrabajoGradoController;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,3 +58,5 @@ Route::get('estudiantes/{nro_registro}', function ($nro_registro){
     }
     return response()->json($estudiante);
 });
+Route::resource('usuarios', UsuarioController::class )->middleware(['auth','can:administrar-usuarios'])->except(['destroy']);
+

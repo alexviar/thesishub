@@ -7,8 +7,16 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
-a:has(svg) {
+a:has(svg), button:has(svg) {
     display: inline-flex !important;
     align-items: center;
     column-gap: 0.5em;
+}
+
+.dropdown-hide-caret .dropdown-toggle {
+    display: inline-flex;
+    padding: 0;
+    &::after{
+        display: none;
+    }
 }

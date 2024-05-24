@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Usuario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,6 +18,7 @@ class DevSeeder extends Seeder
      */
     public function run()
     {
+        Usuario::factory(100)->create();
         $this->call(EstudianteSeeder::class);
         $this->call(TutorSeeder::class);
     }

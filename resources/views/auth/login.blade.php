@@ -13,6 +13,11 @@
                         <span class="h2 fw-bold mb-0">Iniciar sesión</span>
                     </div>
                     <form method="POST" action="{{ route('login') }}">
+                        @error('estado')
+                        <div class="alert alert-danger" role="alert">
+                           {{$message}}
+                          </div>
+                        @enderror
                         @csrf
 
                         <div class="mb-3">

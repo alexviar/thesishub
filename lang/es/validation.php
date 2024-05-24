@@ -113,11 +113,11 @@ return [
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'The :attribute must be a number.',
     'password' => [
-        'letters' => 'The :attribute must contain at least one letter.',
-        'mixed' => 'The :attribute must contain at least one uppercase and one lowercase letter.',
-        'numbers' => 'The :attribute must contain at least one number.',
-        'symbols' => 'The :attribute must contain at least one symbol.',
-        'uncompromised' => 'The given :attribute has appeared in a data leak. Please choose a different :attribute.',
+        'letters' => 'La :attribute debe contener al menos una letra.',
+        'mixed' => 'La :attribute debe contener al menos una mayúscula y una minúscula..',
+        'numbers' => 'La :attribute debe contener al menos un número.',
+        'symbols' => 'La :attribute debe contener al menos un símbolo.Ej: $.',
+        'uncompromised' => 'La :attribute has appeared in a data leak. Please choose a different :attribute.',
     ],
     'present' => 'The :attribute field must be present.',
     'prohibited' => 'The :attribute field is prohibited.',
@@ -134,7 +134,7 @@ return [
     'required_with_all' => 'The :attribute field is required when :values are present.',
     'required_without' => 'The :attribute field is required when :values is not present.',
     'required_without_all' => 'The :attribute field is required when none of :values are present.',
-    'same' => 'The :attribute and :other must match.',
+    'same' => 'La :attribute y la :other deben coincidir.',
     'size' => [
         'array' => 'The :attribute must contain :size items.',
         'file' => 'The :attribute must be :size kilobytes.',
@@ -179,6 +179,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'password' => 'contraseña',
+        'password_confirmation' => "confirmacíón de la contraseña"
+    ],
 
 ];
