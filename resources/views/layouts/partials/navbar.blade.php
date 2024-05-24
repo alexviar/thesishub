@@ -11,8 +11,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="ms-auto">
-                <form action="{{route('trabajos_grado.index')}}" class="d-flex" style="min-width:500px">
-                    <input class="form-control me-2" type="search" placeholder="Palabras claves" aria-label="Search" name="keyword">
+                <form action="{{route('trabajos_grado.index')}}" class="d-flex" style="min-width:500px" aria-label="Barra de busqueda">
+                    <input class="form-control me-2" type="search" placeholder="Palabras claves" aria-label="Palabras clave" name="keyword">
                     <button class="btn btn-outline-success" type="submit">Buscar</button>
                 </form>
             </div>
