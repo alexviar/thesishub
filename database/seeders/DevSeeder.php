@@ -21,5 +21,6 @@ class DevSeeder extends Seeder
         Usuario::factory(100)->create();
         $this->call(EstudianteSeeder::class);
         $this->call(TutorSeeder::class);
+        $this->call(TrabajosGradoSeeder::class);
     }
 }
