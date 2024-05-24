@@ -14,6 +14,8 @@ class TrabajoGrado extends Model
 {
     use HasFactory;
 
+    protected $perPage = 50;
+
     public $table = 'trabajos_grado';
 
     protected $fillable = [

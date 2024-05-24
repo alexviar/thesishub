@@ -11,31 +11,13 @@ use Illuminate\Support\Facades\Date;
 
 class TrabajoGradoController extends Controller
 {
-    const DIRECTORIO = 'trabajos_grado';
+    const SAVE_DIRECTORIO = 'trabajos_grado';
 
-    /**
-     * Muestra la vista principal de trabajos de grado.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function index()
+    private function applyFilters($request, $query)
     {
-        return view('trabajos_grado.index');
-    }
-
-    /**
-     * Realiza una búsqueda de trabajos de grado según los parámetros especificados.
-     *
-     * @param  Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function buscar(Request $request)
-    {      
         // Obtener parámetros de búsqueda del request
         $params = $request->only(['keyword', 'theme', 'author', 'tutor', 'start_date', 'end_date']);
 
-        // Crear una consulta base para TrabajoGrado
-        $query = TrabajoGrado::with("estudiantes");
 
         // Aplicar filtros según los parámetros recibidos
         if (!empty($params['theme'])) {
@@ -60,35 +42,48 @@ class TrabajoGradoController extends Controller
 
         // Aplicar filtro por tutor si se especifica
         if (!empty($params['tutor'])) {
-            $query->whereHas('tutor', function($query) use($params){
+            $query->whereHas('tutor', function ($query) use ($params) {
                 $query->where('nombre_completo', 'like', '%' . $params['tutor'] . '%');
             });
         }
 
         // Aplicar filtro por autor si se especifica
         if (!empty($params['author'])) {
-            $query->whereHas('estudiantes', function($query) use($params){
+            $query->whereHas('estudiantes', function ($query) use ($params) {
                 $query->where('nombre_completo', 'like', '%' . $params['author'] . '%');
             });
         }
-
-        $resultados = $query->get();
-        $resultados->append('url_descarga');
-        $resultados->each->truncarResumen(500);
-        // Devolver los resultados como JSON en la respuesta
-        return response()->json($resultados);
     }
 
-    function prepareCarrerasForDropdown(){
+    /**
+     * Muestra la vista principal de trabajos de grado.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(Request $request)
+    {
+        // Crear una consulta base para TrabajoGrado
+        $query = TrabajoGrado::with("estudiantes");
+        $this->applyFilters($request, $query);
+        $resultados = $query->latest()->paginate();
+        
+        $request->flash();
+        
+        return view('trabajos_grado.index', compact('resultados'));
+    }
+
+    function prepareCarrerasForDropdown()
+    {
         $carreras = Carrera::with('facultad')->get();
-        return $carreras->map(fn($carrera) => [
+        return $carreras->map(fn ($carrera) => [
             "id" => $carrera->id,
             "label" => $carrera->nombre,
             "subtext" => $carrera->facultad->nombre
         ])->toJson();
     }
 
-    function create(){
+    function create()
+    {
         $carreras = $this->prepareCarrerasForDropdown();
         return view('trabajos_grado.publicar', [
             "carreras" => $carreras,
@@ -99,17 +94,18 @@ class TrabajoGradoController extends Controller
         ]);
     }
 
-    function validateStoreRequest(Request $request){
+    function validateStoreRequest(Request $request)
+    {
         return $request->validate([
             "tema" => "required|string",
             "resumen" => "required|string",
-            "fecha_defensa" => "required|date|before_or_equal:".Date::now()->toDateString(),
+            "fecha_defensa" => "required|date|before_or_equal:" . Date::now()->toDateString(),
             "documento" => "required|file|mimetypes:application/pdf",
 
             "tutor.id" => "nullable|exists:tutores,id",
             "tutor.codigo" => "required_without:tutor.id|string",
             "tutor.nombre_completo" => "required_without:tutor.id|string",
-            
+
             "estudiantes" => "required|array|min:1",
             "estudiantes.*.id" => "nullable|exists:estudiantes,id",
             "estudiantes.*.nro_registro" => "required_without:estudiantes.*.id|string",
@@ -122,7 +118,7 @@ class TrabajoGradoController extends Controller
 
             "tutor.codigo.required_without" => "El campo :attribute es requerido.",
             "tutor.nombre_completo.required_without" => "El campo :attribute es requerido.",
-            
+
             "estudiantes.required" => "Debe introducir al menos un estudiante.",
             "estudiantes.*.nro_registro.required_without" => "El campo :attribute es requerido.",
             "estudiantes.*.nombre_completo.required_without" => "El campo :attribute es requerido.",
@@ -139,17 +135,18 @@ class TrabajoGradoController extends Controller
         ]);
     }
 
-    function store(Request $request){
+    function store(Request $request)
+    {
         $payload = $this->validateStoreRequest($request);
 
         $documento = $request->file("documento");
-        $payload["filename"] = $documento->store(self::DIRECTORIO);
+        $payload["filename"] = $documento->store(self::SAVE_DIRECTORIO);
 
         $tutor_id = $payload["tutor"]["id"] ?? Tutor::create($payload["tutor"])->id;
         $trabajo = TrabajoGrado::create($payload + ["tutor_id" => $tutor_id]);
-        if($trabajo){
-            foreach($payload["estudiantes"] as $estudianteData){
-                [$estudiante_id, $carrera_id] = isset($estudianteData["id"]) ? 
+        if ($trabajo) {
+            foreach ($payload["estudiantes"] as $estudianteData) {
+                [$estudiante_id, $carrera_id] = isset($estudianteData["id"]) ?
                     [$estudianteData["id"], $estudianteData["carrera_id"]] :
                     [Estudiante::create($estudianteData)->id, $estudianteData["carrera_id"]];
                 $trabajo->estudiantes()->attach($estudiante_id, ["carrera_id" => $carrera_id]);
@@ -162,12 +159,11 @@ class TrabajoGradoController extends Controller
                 ]
             ]);
         }
-
     }
 
     public function descargar($filename)
     {
-        $directorio = self::DIRECTORIO;
+        $directorio = self::SAVE_DIRECTORIO;
         $rutaArchivo = storage_path("app/{$directorio}/$filename");
         return response()->stream(function () use ($rutaArchivo) {
             readfile($rutaArchivo);
@@ -182,10 +178,10 @@ class TrabajoGradoController extends Controller
         $trabajoDeGrado = TrabajoGrado::with('estudiantes', 'carreras', 'tutor')->find($id);
         $ui = [
             "title" => "Informacion",
-            
+
             // otras claves y valores que necesites
         ];
-        
-        return view('trabajos_grado.info', compact('ui','id','trabajoDeGrado'));
+
+        return view('trabajos_grado.info', compact('ui', 'id', 'trabajoDeGrado'));
     }
 }
