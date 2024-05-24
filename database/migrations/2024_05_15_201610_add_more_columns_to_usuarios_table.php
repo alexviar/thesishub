@@ -15,7 +15,7 @@ return new class extends Migration
     {
         //modifica una tabla usuarios en la base de datos
         Schema::table('usuarios',function (Blueprint $table) {
-            $table->string('email')->nullable(false);
+            $table->string('email')->nullable();
             $table->boolean('is_admin')->defaultValue(false);
             $table->boolean('estado')->default(1);
             
