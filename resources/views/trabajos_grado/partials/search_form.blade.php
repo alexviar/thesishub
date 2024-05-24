@@ -1,6 +1,6 @@
-<form id="form-busquedatrabajo" method="GET">
+<form id="form-busquedatrabajo" method="GET" aria-label="Formulario de búsqueda">
     <div class="form-group mb-3">
-        <label for="keyword">Palabra Clave:</label>
+        <label for="keyword">Palabras Clave:</label>
         <input type="text" class="form-control" id="keyword" name="keyword" value="{{old('keyword')}}">
     </div>
     <div class="form-group mb-3">
