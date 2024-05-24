@@ -49,3 +49,25 @@ test('Usuarios inactivos no pueden iniciar sesion', function() {
     $response->assertSessionHasErrors(['estado']);
 
 });
+
+it('intenta inyectar SQL en el nombre de usuario', function(){
+    $response = $this->post('/login', [
+        'username' => "' OR 1 = 1 --",
+        'password' => "1234"
+    ]);
+    
+    $response->assertStatus(302); 
+    $response->assertSessionHasErrors(['username', 'password']);
+    $this->assertGuest();
+});
+
+it('intenta inyectar SQL en la contraseña', function(){
+    $response = $this->post('/login', [
+        'username' => "admin",
+        'password' => "' OR 1 = 1 --"
+    ]);
+    
+    $response->assertStatus(302); 
+    $response->assertSessionHasErrors(['username', 'password']);
+    $this->assertGuest();
+});
