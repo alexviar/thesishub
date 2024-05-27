@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'namespace' => 'App\Modules',
+    'namespace' => 'App\\Modules',
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +71,7 @@ return [
         |
         */
 
-        'modules' => base_path('app\Modules'),
+        'modules' => base_path('app/Modules'),
         /*
         |--------------------------------------------------------------------------
         | Modules assets path
