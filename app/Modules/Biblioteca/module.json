@@ -1,0 +1,11 @@
+{
+    "name": "Biblioteca",
+    "alias": "biblioteca",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\Biblioteca\\Providers\\BibliotecaServiceProvider"
+    ],
+    "files": []
+}

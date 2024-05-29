@@ -13,8 +13,11 @@
 
 uses(Tests\TestCase::class)->beforeEach(function(){
     $this->withoutVite();
-}
-)->in('Feature');
+})->in(
+    'Feature',
+    '../app/Modules/Auth/Tests/Feature',
+    '../app/Modules/Biblioteca/Tests/Feature',
+);
 
 /*
 |--------------------------------------------------------------------------

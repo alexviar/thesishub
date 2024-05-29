@@ -1,0 +1,24 @@
+{
+  "resources/js/app.js": {
+    "file": "assets/app-2f9fd87d.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/trabajos_grado/publicar.css": {
+    "file": "assets/publicar-397cced2.css",
+    "src": "resources/js/trabajos_grado/publicar.css"
+  },
+  "resources/js/trabajos_grado/publicar.js": {
+    "css": [
+      "assets/publicar-397cced2.css"
+    ],
+    "file": "assets/publicar-be62c4fb.js",
+    "isEntry": true,
+    "src": "resources/js/trabajos_grado/publicar.js"
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-3edbf478.css",
+    "isEntry": true,
+    "src": "resources/sass/app.scss"
+  }
+}
