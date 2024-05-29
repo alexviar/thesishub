@@ -103,5 +103,5 @@ var estudiantes = <?php echo json_encode(old("estudiantes") ?? [
 
 var carreras = <?php echo $carreras; ?>;
 </script>
-@vite('resources/js/trabajos_grado/publicar.js')
+@vite('app/Modules/Biblioteca/Resources/assets/js/trabajos_grado/publicar.js')
 @endpush

@@ -19,7 +19,7 @@
                 {{ method_field('PATCH') }}
                 @csrf
 
-                @include('usuarios.form')
+                @include('auth::usuarios.form')
 
             </form>
         </div>

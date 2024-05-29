@@ -22,7 +22,7 @@ class UsuarioController extends Controller
         $usuarios = Usuario::latest('updated_at')->paginate();
         $offset = $usuarios->firstItem(); 
         
-        return view('usuarios.index', compact('usuarios', 'offset'))
+        return view('auth::usuarios.index', compact('usuarios', 'offset'))
             ->with('i', (request()->input('page', 1) - 1) * $usuarios->perPage());
     }
 
@@ -32,7 +32,7 @@ class UsuarioController extends Controller
     public function create()
     {
         $usuario = new Usuario();
-        return view('usuarios.create', compact('usuario'));
+        return view('auth::usuarios.create', compact('usuario'));
     }
 
     /**
@@ -56,7 +56,7 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
 
-        return view('usuarios.show', compact('usuario'));
+        return view('auth::usuarios.show', compact('usuario'));
     }
 
     /**
@@ -66,7 +66,7 @@ class UsuarioController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
 
-        return view('usuarios.edit', compact('usuario'));
+        return view('auth::usuarios.edit', compact('usuario'));
     }
 
     /**

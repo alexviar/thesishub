@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">Formulario de búsqueda</div>
                     <div class="card-body">
-                        @include('trabajos_grado.partials.search_form')
+                        @include('biblioteca::trabajos_grado.partials.search_form')
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 @endif
                 <div id="results-container">
                     @foreach ($resultados as $resultado)
-                        @include('trabajos_grado.partials.result_item', [
+                        @include('biblioteca::trabajos_grado.partials.result_item', [
                             'trabajo' => $resultado
                         ])
                     @endforeach

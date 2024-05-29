@@ -1,4 +1,4 @@
-import { SearchableSelect } from "../components/SearchableSelect";
+import { SearchableSelect } from "../../../../../../../resources/js/components/SearchableSelect";
 
 export class EstudianteItem {
 

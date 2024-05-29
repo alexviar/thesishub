@@ -17,7 +17,7 @@
         <form method="POST" action="{{ route('usuarios.store') }}">
             @csrf
 
-            @include('usuarios.form')
+            @include('auth::usuarios.form')
 
         </form>
     </div>

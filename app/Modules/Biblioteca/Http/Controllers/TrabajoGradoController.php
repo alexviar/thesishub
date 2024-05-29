@@ -70,7 +70,7 @@ class TrabajoGradoController extends Controller
         
         $request->flash();
         
-        return view('trabajos_grado.index', compact('resultados'));
+        return view('biblioteca::trabajos_grado.index', compact('resultados'));
     }
 
     function prepareCarrerasForDropdown()
@@ -86,7 +86,7 @@ class TrabajoGradoController extends Controller
     function create()
     {
         $carreras = $this->prepareCarrerasForDropdown();
-        return view('trabajos_grado.publicar', [
+        return view('biblioteca::trabajos_grado.publicar', [
             "carreras" => $carreras,
             "ui" => [
                 "title" => "Registro de trabajos de grado",
@@ -152,7 +152,7 @@ class TrabajoGradoController extends Controller
                     [Estudiante::create($estudianteData)->id, $estudianteData["carrera_id"]];
                 $trabajo->estudiantes()->attach($estudiante_id, ["carrera_id" => $carrera_id]);
             }
-            return view('trabajos_grado.publicar', [
+            return view('biblioteca::trabajos_grado.publicar', [
                 "carreras" => $this->prepareCarrerasForDropdown(),
                 "ui" => [
                     "title" => "Registro de trabajos de grado",
@@ -183,6 +183,6 @@ class TrabajoGradoController extends Controller
             // otras claves y valores que necesites
         ];
 
-        return view('trabajos_grado.info', compact('ui', 'id', 'trabajoDeGrado'));
+        return view('biblioteca::trabajos_grado.info', compact('ui', 'id', 'trabajoDeGrado'));
     }
 }

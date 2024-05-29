@@ -7,7 +7,7 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
-                'resources/js/trabajos_grado/publicar.js'
+                'app/Modules/Biblioteca/Resources/assets/js/trabajos_grado/publicar.js'
             ],
             refresh: true,
         }),
